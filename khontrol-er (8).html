@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khontrol.er - micro:bit</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23dd6666'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white'>✱</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400;600;800&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+<style>
+:root{--bg:#2b2b2b;--coral:#dd6666;--card:#d9d9d9;--dark:#555;--ink:#111;--f:"Tektur","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:#fff;font-family:var(--f);display:flex}
+button,input,select{font:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
+/* Sidebar */
+aside{width:250px;flex:none;background:linear-gradient(#3b1f1f,#a15555);padding:24px 22px;display:flex;flex-direction:column;gap:28px;position:relative;margin-right:18px}
+aside::after{content:"";position:absolute;right:-4px;top:0;bottom:0;width:8px;background:repeating-linear-gradient(to bottom,#fff 0 3px,transparent 3px 22px);opacity:.9}
+.logo{background:var(--coral);border-radius:999px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;font-size:1.05rem;letter-spacing:.06em;font-weight:400}
+nav{display:flex;flex-direction:column;gap:18px}
+.nav{background:transparent;color:#fff;border:0;border-inline:4px solid #000;border-radius:10px;padding:12px 10px;font-weight:800;font-size:1.05rem;text-align:left;cursor:pointer;display:flex;gap:10px;align-items:center}
+.nav.on{background:linear-gradient(#9a9a9a,#777);border-color:#000}
+.side-bt{margin:auto -4px -4px;padding:4px;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.st{display:flex;align-items:center;gap:8px;font-size:.9rem}
+.dot{width:12px;height:12px;border-radius:50%;background:#ccc;flex:none}
+.dot.on{background:#7dffb6;box-shadow:0 0 0 4px rgba(125,255,182,.3)}
+.btn{background:var(--coral);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:800;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;border:2px solid #fff}
+
+/* Main */
+main{flex:1;min-width:0;padding:24px 24px 24px 0;display:flex}
+.panel{flex:1;border-radius:40px;background:linear-gradient(135deg,#4a4846 0%,#5a5856 40%,#a9a3a3 100%);padding:20px 30px 30px;overflow:auto;min-height:0}
+.pill{display:inline-flex;align-items:center;gap:14px;background:var(--coral);border-radius:999px;padding:6px 60px 6px 14px;font-weight:800;font-size:1.5rem;margin:0}
+.pill i{width:24px;height:24px;border-radius:50%;background:#fff}
+h2.sub{font-size:1.5rem;font-weight:600;margin:26px 0 22px}
+.grid{display:flex;flex-wrap:wrap;gap:24px}
+.w{width:238px;background:var(--card);color:var(--ink);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;position:relative}
+.w .h,.w .f{font-weight:800;font-size:1rem;letter-spacing:.02em;word-break:break-word}
+.tg{width:100%;height:58px;border-radius:999px;background:var(--dark);border:0;padding:6px;cursor:pointer;position:relative;transition:background .3s}
+.tg .k{position:absolute;top:6px;left:6px;width:46px;height:46px;border-radius:50%;background:#d9d9d9;display:grid;place-items:center;transition:left .35s cubic-bezier(.34,1.56,.64,1),transform .35s;color:#444}
+.tg:active .k{transform:scaleX(1.15)}
+.tg[aria-checked=true] .k svg{color:var(--coral)}
+.tg[aria-checked=true]{background:var(--coral)}
+.tg[aria-checked=true] .k{left:calc(100% - 52px)}
+.val{width:100%;background:var(--dark);color:#fff;font-size:2.4rem;font-weight:600;padding:6px 0;min-height:58px}
+.act{width:100%;height:58px;border-radius:14px;border:0;background:var(--dark);color:#fff;font-weight:800;font-size:1.1rem;cursor:pointer}
+.act:active{background:var(--coral)}
+.rg{width:100%;accent-color:var(--coral);height:58px}
+.empty{color:#eee;max-width:420px}
+
+/* Log */
+.logbox{margin-top:30px;background:rgba(0,0,0,.35);border-radius:18px;padding:14px}
+.logbox h3{margin:0 0 8px;font-size:1rem}
+#log{height:170px;overflow:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+#log .rx{color:#7dffb6}#log .tx{color:#a8c4ff}#log .er{color:#ffb3ad}#log .t{opacity:.55;margin-right:6px}
+
+/* Builder */
+.select{position:relative;max-width:900px}
+.select select{appearance:none;width:100%;background:var(--card);color:var(--ink);border:0;border-radius:14px;padding:16px 60px 16px 20px;font-size:1.1rem;font-weight:600}
+.select svg{position:absolute;right:22px;top:50%;transform:translateY(-50%);pointer-events:none}
+.form{max-width:900px;margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.form label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.95rem}
+.form input{background:var(--card);border:0;border-radius:12px;padding:12px 14px;color:var(--ink)}
+.form .btn{grid-column:1/-1;justify-self:start}
+.hint{grid-column:1/-1;margin:0;color:#eee;font-size:.9rem}
+.list{max-width:900px;margin-top:28px;display:flex;flex-direction:column;gap:10px}
+.item{background:rgba(0,0,0,.3);border-radius:14px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.item span{word-break:break-word}
+.item small{opacity:.75}
+[hidden]{display:none!important}
+
+/* Controller */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.tab{background:rgba(0,0,0,.3);color:#fff;border:0;border-radius:999px;padding:10px 20px;font-weight:800;cursor:pointer;transition:background .25s,transform .2s}
+.tab:hover{transform:translateY(-2px)}
+.tab.on{background:var(--coral)}
+.ctl-warn{margin:0 0 18px;padding:10px 16px;border-radius:14px;background:rgba(0,0,0,.35);max-width:560px}
+.ctl{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.ctl-main{min-width:260px}
+.ctl-main>div:not([hidden]){animation:fadeIn .35s ease-out}
+.dpad{display:grid;grid-template-columns:repeat(3,84px);grid-template-rows:repeat(3,84px);gap:10px}
+.dpad button{background:var(--card);color:var(--ink);border:0;border-radius:18px;font-size:1.8rem;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;display:grid;place-items:center;box-shadow:0 6px 0 #9a9a9a;transition:transform .12s,background .15s,color .15s,box-shadow .15s}
+.dpad button.down{background:var(--coral);color:#fff;transform:translateY(5px);box-shadow:0 1px 0 #9a3a3a}
+.dpad [data-cmd=up]{grid-area:1/2}.dpad [data-cmd=left]{grid-area:2/1}
+.dpad [data-cmd=horn]{grid-area:2/2;border-radius:50%}
+.dpad [data-cmd=right]{grid-area:2/3}.dpad [data-cmd=down]{grid-area:3/2}
+.joy{position:relative;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,#6a6a6a 0,#444 72%);border:6px solid var(--card);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.joy .knob{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--card);box-shadow:0 6px 12px rgba(0,0,0,.45);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s}
+.joy .knob.drag{transition:background .2s;background:var(--coral)}
+.abox{position:relative;width:250px;height:250px;border-radius:24px;background-color:#444;border:6px solid var(--card);background-image:linear-gradient(#5e5e5e 1px,transparent 1px),linear-gradient(90deg,#5e5e5e 1px,transparent 1px);background-size:41px 41px}
+.abox i{position:absolute;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:var(--coral);transition:left .1s linear,top .1s linear}
+.read{margin:14px 0 0;max-width:340px;font-weight:600}
+#joyv,#accv{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.1rem}
+.ctl-side{width:260px;max-width:100%}
+.ctl-side .w{width:100%;align-items:stretch}
+.sl{display:flex;flex-direction:column;gap:2px;text-align:left;font-weight:800}
+.sl span{display:flex;justify-content:space-between}
+@media (max-width:760px){.dpad{grid-template-columns:repeat(3,76px);grid-template-rows:repeat(3,76px)}.ctl-side{width:100%}}
+
+/* Bantuan Bluetooth */
+.opt{display:flex;gap:8px;align-items:center;font-size:.85rem;cursor:pointer}
+.opt input{accent-color:var(--coral);width:16px;height:16px}
+.help{font-size:.85rem;line-height:1.45}
+.help summary{cursor:pointer;font-weight:800}
+.help ol{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.help[open] ol{max-height:230px;overflow:auto}
+@media (max-width:760px){.side-bt{flex-wrap:wrap}.help{width:100%}}
+
+.bt-err{margin:0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.4);border-left:4px solid var(--coral);font-size:.8rem;line-height:1.4;max-height:150px;overflow:auto;animation:fadeIn .3s ease-out}
+/* Modal hapus */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;animation:fadeIn .2s ease-out}
+.modal-box{background:var(--card);color:var(--ink);border-radius:18px;padding:24px 26px;max-width:360px;width:100%;animation:pop .25s cubic-bezier(.34,1.56,.64,1) both}
+.modal-box h3{margin:0 0 10px;font-size:1.15rem}
+.modal-box p{margin:0 0 20px;font-size:.95rem;line-height:1.5}
+.modal-act{display:flex;justify-content:flex-end;gap:10px}
+.btn.danger{background:var(--coral);color:#fff}
+
+/* Animasi */
+@keyframes slideIn{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes riseIn{from{transform:translateY(24px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(.7) translateY(14px);opacity:0}70%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes viewIn{from{transform:translateX(26px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes flash{0%{background:var(--coral);transform:scale(1.06)}100%{background:var(--dark);transform:none}}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(125,255,182,.7)}100%{box-shadow:0 0 0 12px rgba(125,255,182,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes drop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+aside{animation:slideIn .6s cubic-bezier(.2,.8,.2,1) both}
+.panel{animation:riseIn .7s .15s cubic-bezier(.2,.8,.2,1) both}
+.pill i{animation:blink 2.4s ease-in-out infinite}
+.logo span:first-child,.logo span:last-child{display:inline-block;transition:transform .6s}
+.logo:hover span:first-child,.logo:hover span:last-child{transform:rotate(180deg)}
+.nav{transition:background .25s,transform .25s,padding-left .25s}
+.nav:hover{transform:translateX(6px);background:rgba(255,255,255,.12)}
+.nav.on:hover{background:linear-gradient(#9a9a9a,#777)}
+.view-in{animation:viewIn .4s cubic-bezier(.2,.8,.2,1) both}
+.w.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1) backwards}
+.w.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.hint.err{padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.4);border-left:4px solid var(--coral);color:#fff;animation:shake .35s}
+.w{transition:transform .25s,box-shadow .25s}
+.w:hover{transform:translateY(-6px);box-shadow:0 14px 26px rgba(0,0,0,.35)}
+.val.flash{animation:flash .6s ease-out}
+.act{transition:transform .15s,background .2s}
+.act:active{transform:scale(.94)}
+.rg{cursor:pointer}
+.btn{transition:transform .2s,box-shadow .2s,opacity .2s}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.btn:active:not(:disabled){transform:scale(.96)}
+.dot{transition:background .3s}
+.dot.on{animation:ping 1.6s ease-out infinite}
+.dot.wait{background:#ffd27d;animation:blink .8s infinite}
+#log div{animation:fadeIn .3s ease-out}
+.form:not([hidden]){animation:drop .35s ease-out}
+.item{animation:fadeIn .35s ease-out;transition:transform .2s}
+.item:hover{transform:translateX(6px)}
+.select select{transition:box-shadow .2s,transform .2s;cursor:pointer}
+.select select:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.3)}
+.select svg{transition:transform .3s}
+.select:focus-within svg{transform:translateY(-50%) rotate(180deg)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media (max-width:760px){
+  body{flex-direction:column;height:auto;min-height:100%}
+  aside{width:auto;margin:0;padding:16px;gap:14px}
+  aside::after{display:none}
+  nav{flex-direction:row}.nav{flex:1;font-size:.95rem}
+  .side-bt{flex-direction:row;align-items:center;justify-content:space-between}
+  main{padding:14px}
+  .panel{border-radius:28px;padding:16px}
+  .w{width:100%}
+}
+.mbeyes{height:1.5em;width:auto;flex:none;color:#111;margin-left:2px}
+.mbeyes .pu{fill:currentColor}
+.pill:has(.mbeyes){padding-right:20px}
+.mbeyes{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mbeyes .hp{fill:none;stroke:currentColor;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s}
+.mbeyes .pc{transition:opacity .12s}
+.mbeyes.happy .pc{opacity:0}
+.mbeyes.happy .hp{opacity:1}
+.mbeyes.happy{animation:hop .5s ease-out}
+@keyframes hop{30%{transform:translateY(-6px) scale(1.12,.94)}55%{transform:scale(.96,1.05)}}
+/* jokowi.web */
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.clock{text-align:right}.clock b{display:block;font:600 1.6rem ui-monospace,Menlo,Consolas,monospace}.clock small{opacity:.7;letter-spacing:.2em}
+.stage{display:flex;flex-direction:column;align-items:center;margin-top:8px}.stage .read{text-align:center}
+.dpad .dst{grid-area:2/2;border-radius:50%;background:var(--dark);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem;letter-spacing:.08em;transition:background .2s,transform .2s}
+.dpad .dst.on{background:var(--coral);transform:scale(1.06)}
+.pv{max-width:400px;margin:24px auto 0;background:rgba(0,0,0,.3);border-radius:18px;padding:14px 18px}
+.pv h3{margin:0 0 10px;font-size:.95rem}
+.pvg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center;font-size:.75rem}
+.pvg b{display:block;color:#ffd0cc;font-size:.9rem;overflow-wrap:anywhere}
+.av{display:inline-block;line-height:1;cursor:pointer}
+.av .st{display:inline-block;transition:transform .6s}
+.logo:hover .st{transform:rotate(180deg)}
+.av img{display:none}
+.av.has-photo{width:30px;height:30px;flex:none;border-radius:50%;overflow:hidden;border:2px solid #fff;transition:transform .25s}
+.av.has-photo:hover{transform:scale(1.12) rotate(-6deg)}
+.av.has-photo .st{display:none}
+.av.has-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.toast{position:fixed;right:22px;bottom:22px;max-width:calc(100% - 44px);background:var(--coral);color:#fff;padding:10px 18px;border-radius:999px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.4);transform:translateY(140px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:60}
+.toast.show{transform:none}
+.tm{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:22px;max-width:980px}
+.card{background:rgba(0,0,0,.3);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h3{margin:0;font-size:1rem}
+textarea{width:100%;background:var(--card);color:var(--ink);border:0;border-radius:12px;padding:12px 14px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+.hint2{margin:0;color:#eee;font-size:.85rem}
+.lb{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.9rem}
+.cam{aspect-ratio:4/3;background:#1b1b1b;border-radius:14px;overflow:hidden;display:grid;place-items:center;text-align:center;padding:10px;color:#bbb;font-size:.85rem}
+.cam canvas{width:100%;height:100%;object-fit:cover}
+.row2{display:flex;gap:10px}.row2 .btn{flex:1}
+.pred{background:rgba(0,0,0,.35);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column}
+.pred b{font-size:1.4rem;overflow-wrap:anywhere}.pred small,.pred span{opacity:.75;font-size:.8rem}
+.tmrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tmrow>span:first-child{width:110px;font-weight:800;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tmrow input{flex:1;min-width:0;background:var(--card);color:var(--ink);border:0;border-radius:10px;padding:8px 10px}
+.view-in .card,.view-in .pv{animation:pop .5s cubic-bezier(.34,1.56,.64,1) backwards}
+.view-in .card:nth-child(2){animation-delay:.1s}.view-in .card:nth-child(3){animation-delay:.2s}
+nav .nav[data-view=teach]{font-size:.85em;letter-spacing:0;white-space:nowrap}
+.mbeyes .ex{fill:none;stroke:currentColor;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .12s}
+.mbeyes .exf{fill:currentColor;stroke:none;opacity:0;transition:opacity .12s}
+.mbeyes.s-happy .x-happy,.mbeyes.s-wink .x-wink,.mbeyes.s-excited .x-excited,.mbeyes.s-heart .x-heart{opacity:1}
+.mbeyes.s-happy .pc,.mbeyes.s-excited .pc,.mbeyes.s-heart .pc,.mbeyes.s-wink .r .pc{opacity:0}
+.mbeyes.s-happy,.mbeyes.s-wink,.mbeyes.s-excited,.mbeyes.s-scan{animation:hop .5s ease-out}
+.mbeyes.s-heart{animation:beat2 .6s ease-in-out 2}
+.mbeyes.s-scan .pc{transform-box:fill-box;transform-origin:center;animation:scan 1.2s ease-in-out}
+@keyframes scan{0%,100%{transform:scale(1)}15%,85%{transform:scale(1.5)}35%{transform:scale(1.5) translateX(-12px)}65%{transform:scale(1.5) translateX(12px)}}
+@keyframes beat2{50%{transform:scale(1.2)}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><label class="av" title="Klik untuk ganti foto"><span class="st">✱</span><img id="logoImg" alt="Logo"><input type="file" id="logoIn" accept="image/*" hidden></label><span>KHONTROL.ER</span><span>✱</span></div>
+  <nav>
+    <button class="nav on" data-view="dashboard" aria-current="page">&#9638; DASHBOARD</button>
+    <button class="nav" data-view="builder">&#9874; BUILDER</button>
+    <button class="nav" data-view="controller">&#10021; CONTROLLER</button>
+    <button class="nav" data-view="teach">&#9673; OBJECT DETECTOR</button>
+    <button class="nav" data-view="settings">&#9881; SETTINGS</button>
+  </nav>
+  <div class="side-bt">
+    <div class="st"><span class="dot" id="dot"></span><span id="stText" role="status">Belum terhubung</span></div>
+    <button class="btn" id="btnBt">Hubungkan micro:bit</button>
+    <button class="btn ghost" id="btnDisc" hidden>Putuskan</button>
+    <p class="bt-err" id="btErr" role="alert" hidden></p>
+    <label class="opt"><input type="checkbox" id="showAll"> Tampilkan semua perangkat</label>
+    <details class="help">
+      <summary>Bantuan koneksi</summary>
+      <ol>
+        <li>Di MakeCode: tambah ekstensi Bluetooth dan blok "bluetooth uart service" di awal program.</li>
+        <li>Paling mudah: di Project Settings nyalakan "No Pairing Required", lalu flash ulang.</li>
+        <li>Kalau memakai pairing: tekan A+B lalu reset, dan masukkan kode 6 digit yang tampil di LED.</li>
+        <li>Pernah dipairing dan gagal? Hapus "BBC micro:bit" di pengaturan Bluetooth perangkat, lalu reset micro:bit.</li>
+        <li>Micro:bit hanya menerima satu koneksi. Tutup MakeCode pairing atau aplikasi micro:bit lain.</li>
+        <li>Tidak muncul di daftar? Centang "Tampilkan semua perangkat".</li>
+      </ol>
+    </details>
+  </div>
+</aside>
+
+<main>
+<div class="panel">
+
+  <section id="v-dashboard">
+    <div class="head"><div><h1 class="pill"><i></i>DASHBOARD<span class="mbslot" data-ex="happy"></span></h1>
+    <h2 class="sub">control board</h2></div><div class="clock"><b id="clock">00:00:00</b><small>WIB</small></div></div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>Widget dari Builder akan muncul di sini.</p>
+    <div class="logbox">
+      <h3>Log Bluetooth</h3>
+      <div id="log" role="log" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="v-builder" hidden>
+    <h1 class="pill"><i></i>BUILDER<span class="mbslot" data-ex="wink"></span></h1>
+    <h2 class="sub">build now!</h2>
+    <div class="select">
+      <select id="type" aria-label="Jenis widget">
+        <option value="">Pilih jenis widget...</option>
+        <option value="switch">Switch (kirim 1 / 0)</option>
+        <option value="sensor">Sensor (tampilkan nilai)</option>
+        <option value="button">Tombol (kirim 1)</option>
+        <option value="slider">Slider (kirim angka)</option>
+      </select>
+      <svg width="26" height="16" viewBox="0 0 26 16"><path d="M3 3l10 9 10-9" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="form" id="form" hidden>
+      <label>Nama widget<input id="fName" placeholder="mis. Light" maxlength="20"></label>
+      <label>Kunci data<input id="fKey" placeholder="mis. light" maxlength="20" autocapitalize="off"></label>
+      <label id="lMin" hidden>Nilai minimum<input id="fMin" type="number" value="0"></label>
+      <label id="lMax" hidden>Nilai maksimum<input id="fMax" type="number" value="255"></label>
+      <p class="hint" id="hint"></p>
+      <button class="btn" id="btnAdd">Tambah widget</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="v-controller" hidden>
+    <h1 class="pill"><i></i>CONTROLLER<span class="mbslot" data-ex="excited"></span></h1>
+    <h2 class="sub">drive now!</h2>
+    <p class="ctl-warn" id="ctlWarn">Hubungkan micro:bit lewat tombol di sidebar untuk mulai mengontrol.</p>
+    <div class="stage">
+      <div class="dpad" id="dpad">
+        <button data-cmd="up" aria-label="Atas">&#9650;</button>
+        <button data-cmd="left" aria-label="Kiri">&#9664;</button>
+        <div class="dst" id="dst" aria-live="polite">STOP</div>
+        <button data-cmd="right" aria-label="Kanan">&#9654;</button>
+        <button data-cmd="down" aria-label="Bawah">&#9660;</button>
+      </div>
+      <p class="read">Tahan tombol untuk bergerak. Bisa juga pakai tombol panah keyboard.</p>
+    </div>
+    <div class="pv"><h3>Data yang dikirim</h3><div class="pvg">
+      <span>UP<b id="pv-up">up</b></span><span>DOWN<b id="pv-down">down</b></span><span>LEFT<b id="pv-left">left</b></span><span>RIGHT<b id="pv-right">right</b></span><span>STOP<b id="pv-stop">stop</b></span>
+    </div></div>
+  </section>
+
+  <section id="v-teach" hidden>
+    <h1 class="pill"><i></i>OBJECT DETECTOR<span class="mbslot" data-ex="scan"></span></h1>
+    <h2 class="sub">detect now!</h2>
+    <div class="tm">
+      <div class="card">
+        <label class="lb" for="tmUrl">Shareable link Teachable Machine</label>
+        <input id="tmUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://teachablemachine.withgoogle.com/models/xxxx/">
+        <p class="hint2">Di Teachable Machine: Export Model, tab Tensorflow.js, pilih Upload my model, lalu salin shareable link-nya. Nama class = perintah (up, down, left, right, stop).</p>
+        <label class="lb">Threshold <b id="tmThV">0.75</b><input class="rg" id="tmTh" type="range" min="50" max="99" value="75"></label>
+        <p class="hint2">Perintah hanya dikirim jika confidence sama atau di atas threshold.</p>
+      </div>
+      <div class="card">
+        <div class="cam"><canvas id="tmCv" hidden></canvas><div id="tmPh"><b>Kamera belum aktif</b><br>Tempel shareable link lalu tekan Start kamera</div></div>
+        <div class="row2"><button class="btn" id="tmStart">Start kamera</button><button class="btn ghost" id="tmStop" disabled>Stop</button></div>
+        <div class="pred"><small>Prediksi</small><b id="tmLabel">—</b><span id="tmConf">confidence: 0%</span></div>
+      </div>
+      <div class="card" id="tmMapBox" hidden>
+        <h3>Class → perintah</h3>
+        <p class="hint2">Sesuai class training. Bisa diubah manual.</p>
+        <div id="tmList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="v-settings" hidden>
+    <h1 class="pill"><i></i>SETTINGS<span class="mbslot" data-ex="heart"></span></h1>
+    <h2 class="sub">map now!</h2>
+    <p class="hint2" style="margin-bottom:18px">Atur teks yang dikirim ke micro:bit saat D-Pad ditekan atau dilepas.</p>
+    <div class="form">
+      <label>UP<input id="m-up" maxlength="30" autocomplete="off"></label>
+      <label>DOWN<input id="m-down" maxlength="30" autocomplete="off"></label>
+      <label>LEFT<input id="m-left" maxlength="30" autocomplete="off"></label>
+      <label>RIGHT<input id="m-right" maxlength="30" autocomplete="off"></label>
+      <label>STOP (semua tombol dilepas)<input id="m-stop" maxlength="30" autocomplete="off"></label>
+      <button class="btn" id="btnSaveMap">Simpan mapping</button>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal" id="delModal" hidden role="dialog" aria-modal="true" aria-labelledby="delTitle">
+  <div class="modal-box">
+    <h3 id="delTitle">Hapus widget ini?</h3>
+    <p>Widget <strong id="delName"></strong> akan dihapus dari Dashboard. Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="modal-act">
+      <button class="btn ghost" id="delCancel">Batal</button>
+      <button class="btn danger" id="delOk">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+  const RX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';   // micro:bit -> website
+  const TX='6e400002-b5a3-f393-e0a9-e50e24dcca9e';   // website -> micro:bit
+  const $=id=>document.getElementById(id);
+  const TYPES={switch:'SWITCH',sensor:'SENSOR',button:'TOMBOL',slider:'SLIDER'};
+  const HINTS={
+    switch:'Mengirim "kunci:1" saat ON dan "kunci:0" saat OFF.',
+    sensor:'Menampilkan nilai dari baris "kunci:nilai" yang dikirim micro:bit.',
+    button:'Mengirim "kunci:1" setiap tombol ditekan.',
+    slider:'Mengirim "kunci:angka" saat slider digeser.'};
+  const DEFAULTS=[];
+  let widgets=load(), values={}, dev=null, tx=null, buf='';
+  const dec=new TextDecoder(), enc=new TextEncoder();
+
+  function load(){try{const s=localStorage.getItem('jokowi.widgets');if(s){const a=JSON.parse(s);if(Array.isArray(a))return a.map(clean).filter(Boolean)}}catch(e){}return DEFAULTS.slice()}
+  // rapikan data lama (mis. widget tanpa kunci) agar tidak mengirim "undefined:1"
+  function clean(w){
+    if(!w||!TYPES[w.type])return null;
+    const name=String(w.name||'').trim().slice(0,20),key=String(w.key||name).trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+    if(!name||!key)return null;
+    const o={id:w.id??Date.now()+Math.random(),type:w.type,name,key};
+    if(w.type==='slider'){o.min=Number.isFinite(+w.min)?+w.min:0;o.max=Number.isFinite(+w.max)?+w.max:255}
+    return o;
+  }
+  function save(){try{localStorage.setItem('jokowi.widgets',JSON.stringify(widgets))}catch(e){}}
+  const norm=k=>k.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+
+  /* Log */
+  function log(t,c=''){const d=document.createElement('div');d.className=c;const s=document.createElement('span');s.className='t';s.textContent=new Date().toLocaleTimeString('id-ID');d.append(s,t);const L=$('log');L.appendChild(d);while(L.children.length>150)L.firstChild.remove();L.scrollTop=1e9}
+
+  /* Navigasi */
+  document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{
+    if(b.dataset.view!=='controller'&&!$('v-controller').hidden)stopAll();
+    document.querySelectorAll('.nav').forEach(x=>{x.classList.toggle('on',x===b);if(x===b)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')});
+    document.querySelector('.panel').scrollTop=0;
+    ['dashboard','builder','controller','teach','settings'].forEach(v=>{const s=$('v-'+v);s.hidden=v!==b.dataset.view;s.classList.remove('view-in');if(!s.hidden){void s.offsetWidth;s.classList.add('view-in')}});
+  });
+
+  /* Render dashboard */
+  function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+  function render(anim=true){
+    const g=$('grid');g.textContent='';
+    $('empty').hidden=widgets.length>0;
+    widgets.forEach(w=>{
+      const c=el('div','w'+(anim?' pop':''));c.style.animationDelay=(widgets.indexOf(w)*80)+'ms';
+      c.addEventListener('animationend',e=>{if(e.target===c)c.classList.remove('pop','shake')});
+      const head=el('div','h',w.type==='sensor'?'SENSOR':w.name.toUpperCase());
+      const foot=el('div','f',w.type==='sensor'?w.name.toUpperCase():TYPES[w.type]);
+      let body;
+      if(w.type==='switch'){
+        body=el('button','tg');body.setAttribute('role','switch');
+        body.setAttribute('aria-label',w.name);
+        body.setAttribute('aria-checked',String(values[w.key]==='1'));
+        const k=el('span','k');k.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></svg>';
+        body.appendChild(k);
+        body.onclick=()=>{if(!tx){log('Hubungkan micro:bit dulu.','er');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');return}
+          const on=body.getAttribute('aria-checked')!=='true';
+          values[w.key]=on?'1':'0';body.setAttribute('aria-checked',String(on));send(w.key+':'+(on?1:0))};
+      }else if(w.type==='sensor'){
+        body=el('div','val',values[w.key]??'--');body.dataset.key=w.key;
+      }else if(w.type==='button'){
+        body=el('button','act','TEKAN');body.onclick=()=>send(w.key+':1');
+      }else{
+        body=el('input','rg');body.type='range';body.min=w.min??0;body.max=w.max??255;
+        body.value=values[w.key]??w.min??0;body.setAttribute('aria-label',w.name);
+        body.dataset.key=w.key;
+        body.oninput=()=>{values[w.key]=body.value;sendRate('k'+w.key,w.key+':'+body.value)};
+        body.onchange=()=>{values[w.key]=body.value;sendRate('k'+w.key,w.key+':'+body.value,true)};
+      }
+      c.append(head,body,foot);g.appendChild(c);
+    });
+    renderList();
+  }
+  function renderList(){
+    const l=$('list');l.textContent='';
+    if(!widgets.length)return;
+    widgets.forEach(w=>{
+      const i=el('div','item');
+      const s=el('span');s.append(w.name+' ');const sm=el('small',null,'('+TYPES[w.type].toLowerCase()+', kunci: '+w.key+')');s.appendChild(sm);
+      const b=el('button','btn ghost','Hapus');
+      b.onclick=()=>confirmDelete(w);
+      i.append(s,b);l.appendChild(i);
+    });
+  }
+
+  /* Builder */
+  $('type').onchange=()=>{
+    const t=$('type').value;$('form').hidden=!t;$('hint').classList.remove('err');
+    $('lMin').hidden=$('lMax').hidden=t!=='slider';
+    $('hint').textContent=HINTS[t]||'';
+  };
+  $('btnAdd').onclick=()=>{
+    const t=$('type').value,name=$('fName').value.trim(),key=norm($('fKey').value||name);
+    if(!t||!name||!key){formErr('Isi nama widget dan kunci data.','fName');return}
+    const w={id:Date.now(),type:t,name,key};
+    if(t==='slider'){w.min=+$('fMin').value;w.max=+$('fMax').value;if(!(w.min<w.max)){formErr('Nilai minimum harus lebih kecil dari maksimum.','fMin');return}}
+    widgets.push(w);save();render();
+    $('fName').value=$('fKey').value='';$('type').value='';$('form').hidden=true;
+    document.querySelector('[data-view=dashboard]').click();
+  };
+
+  function formErr(msg,id){const h=$('hint');h.textContent=msg;h.classList.remove('err');void h.offsetWidth;h.classList.add('err');$(id).focus()}
+  $('form').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();$('btnAdd').click()}});
+  let pendingDel=null;
+  function confirmDelete(w){
+    pendingDel=w;
+    $('delName').textContent=w.name;
+    $('delModal').hidden=false;
+    $('delCancel').focus();
+  }
+  function closeDelete(){$('delModal').hidden=true;pendingDel=null}
+  $('delCancel').onclick=closeDelete;
+  $('delOk').onclick=()=>{
+    if(pendingDel){widgets=widgets.filter(x=>x.id!==pendingDel.id);save()}
+    closeDelete();render(false);
+  };
+  $('delModal').addEventListener('click',e=>{if(e.target.id==='delModal')closeDelete()});
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('delModal').hidden)closeDelete()});
+
+  /* Bluetooth */
+  function setBt(on,txt){
+    $('ctlWarn').hidden=on;
+    $('dot').classList.remove('wait');$('dot').classList.toggle('on',on);$('stText').textContent=txt;
+    $('btnBt').hidden=on;$('btnBt').disabled=false;
+    $('btnDisc').hidden=!on;$('btnDisc').textContent='Putuskan';$('btnDisc').disabled=false;
+  }
+  function setWait(txt){
+    $('dot').classList.remove('on');$('dot').classList.add('wait');$('stText').textContent=txt;
+    $('btnBt').hidden=true;$('btnDisc').hidden=false;$('btnDisc').textContent='Batal';$('btnDisc').disabled=false;
+  }
+  if(!navigator.bluetooth){$('btnBt').disabled=true;$('stText').textContent='Web Bluetooth tidak didukung. Pakai Chrome/Edge.'}
+  let busy=false,userDisc=false,rx=null;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  if(navigator.bluetooth&&navigator.bluetooth.getAvailability)
+    navigator.bluetooth.getAvailability().then(ok=>{if(!ok)log('Bluetooth di perangkat ini mati atau tidak tersedia. Nyalakan Bluetooth lalu muat ulang halaman.','er')}).catch(()=>{});
+
+  function showErr(t){const el=$('btErr');el.textContent=t||'';el.hidden=!t}
+  function hint(e){
+    const m=(e&&e.message)||'';
+    if(/No (Services|Characteristics) matching/i.test(m))return 'Perangkat ini tidak punya layanan UART. Pastikan program MakeCode memakai ekstensi Bluetooth dan blok "bluetooth uart service", lalu flash ulang.';
+    if(e.name==='SecurityError'||/permission|secure context/i.test(m))return 'Akses Bluetooth diblokir. Buka halaman lewat HTTPS atau localhost, dan izinkan Bluetooth di browser.';
+    if(e.name==='NetworkError'||/GATT|Connection attempt failed|disconnected/i.test(m))return 'Perangkat sudah Paired tapi koneksi gagal. Biasanya pairing lama tidak cocok: hapus "BBC micro:bit" dari pengaturan Bluetooth Windows/HP, tekan reset di micro:bit, lalu hubungkan lagi. Atau nyalakan "No Pairing Required" di MakeCode dan flash ulang.';
+    return '';
+  }
+
+  async function openGatt(){
+    let last;
+    for(let i=1;i<=3;i++){
+      if(userDisc)throw new Error('Dibatalkan');
+      try{
+        $('stText').textContent=i>1?'Mencoba lagi ('+i+'/3)...':'Menghubungkan...';
+        const srv=await dev.gatt.connect();
+        const svc=await srv.getPrimaryService(SERVICE);
+        tx=await svc.getCharacteristic(TX);
+        if(rx)rx.removeEventListener('characteristicvaluechanged',onData);
+        rx=await svc.getCharacteristic(RX);
+        await rx.startNotifications();
+        rx.addEventListener('characteristicvaluechanged',onData);
+        return;
+      }catch(e){
+        last=e;tx=null;
+        if(dev.gatt.connected)dev.gatt.disconnect();
+        if(userDisc||/No (Services|Characteristics) matching/i.test(e.message||''))break;
+        await sleep(700*i);
+      }
+    }
+    throw last;
+  }
+  function onUp(){
+    showErr('');
+    setBt(true,'Terhubung: '+(dev.name||'micro:bit'));
+    log('Terhubung ke '+(dev.name||'micro:bit'));
+  }
+  function onGone(){
+    tx=null;buf='';
+    if(busy)return;
+    if(userDisc){resetUi();setBt(false,'Belum terhubung');log('Koneksi diputus.');return}
+    resetUi();log('Koneksi terputus. Menyambung ulang...','er');reconnect();
+  }
+  async function reconnect(){
+    busy=true;setWait('Menyambung ulang...');
+    try{await sleep(800);await openGatt();busy=false;onUp()}
+    catch(e){busy=false;tx=null;setBt(false,'Belum terhubung');log(userDisc?'Sambung ulang dibatalkan.':'Gagal menyambung ulang. Klik "Hubungkan micro:bit".',userDisc?'':'er');if(!userDisc)showErr('Sambung ulang gagal: '+(e.message||'')+' '+hint(e))}
+  }
+
+  $('btnBt').onclick=async()=>{
+    if(busy)return;
+    busy=true;userDisc=false;showErr('');
+    try{
+      $('btnBt').disabled=true;$('stText').textContent='Mencari...';$('dot').classList.add('wait');
+      const opts=$('showAll').checked
+        ?{acceptAllDevices:true,optionalServices:[SERVICE]}
+        :{filters:[{namePrefix:'BBC micro:bit'},{services:[SERVICE]}],optionalServices:[SERVICE]};
+      const d=await navigator.bluetooth.requestDevice(opts);
+      if(dev)dev.removeEventListener('gattserverdisconnected',onGone);
+      dev=d;dev.addEventListener('gattserverdisconnected',onGone);setWait('Menghubungkan...');
+      await openGatt();
+      busy=false;onUp();
+    }catch(e){
+      busy=false;tx=null;setBt(false,'Belum terhubung');
+      if(userDisc){log('Koneksi dibatalkan.');return}
+      if(e.name==='NotFoundError'&&/cancel|chooser/i.test(e.message||'')){
+        log('Tidak ada perangkat dipilih. Kalau micro:bit tidak muncul, centang "Tampilkan semua perangkat" lalu coba lagi.');
+      }else{
+        log('Gagal terhubung: '+e.message,'er');const h=hint(e);if(h)log(h,'er');showErr('Gagal terhubung ('+(e.name||'Error')+'): '+(e.message||'')+(h?' '+h:''));
+      }
+    }
+  };
+  /* Sistem disconnect */
+  function resetUi(){dec.decode();clearTimeout(flushT);
+    buf='';
+    Object.keys(values).forEach(k=>delete values[k]);
+    document.querySelectorAll('.val').forEach(e=>e.textContent='--');
+    document.querySelectorAll('.tg').forEach(b=>b.setAttribute('aria-checked','false'));
+    dpadReset();
+  }
+  async function disconnect(){
+    if(!dev)return;
+    userDisc=true;
+    $('btnDisc').disabled=true;
+    if(!busy&&tx){
+      // hentikan gerakan robot dulu sebelum memutus
+      send(map.stop,true);
+      try{await q}catch(e){}
+      await sleep(150);
+    }
+    try{if(rx){rx.removeEventListener('characteristicvaluechanged',onData);await rx.stopNotifications()}}catch(e){}
+    const was=dev.gatt.connected;
+    dev.gatt.disconnect();
+    if(!busy&&!was){tx=null;resetUi();setBt(false,'Belum terhubung');log('Koneksi diputus.')}
+  }
+  $('btnDisc').onclick=disconnect;
+  addEventListener('pagehide',()=>{if(dev&&dev.gatt&&dev.gatt.connected){userDisc=true;dev.gatt.disconnect()}});
+
+  let flushT=null;
+  function rxLine(line){line=line.trim();if(!line)return;log('← '+line,'rx');handle(line)}
+  function onData(ev){
+    buf+=dec.decode(ev.target.value,{stream:true});
+    const p=buf.split('\n');buf=p.pop();
+    p.forEach(rxLine);clearTimeout(flushT);
+    if(buf.trim())flushT=setTimeout(()=>{const l=buf;buf='';rxLine(l)},400); // pesan tanpa baris baru
+  }
+  function handle(line){
+    const i=line.search(/[:=]/);if(i<1)return;
+    const k=norm(line.slice(0,i)),v=line.slice(i+1).trim();
+    values[k]=v;
+    document.querySelectorAll('.val').forEach(e=>{if(e.dataset.key===k){e.textContent=v;e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash')}});
+    document.querySelectorAll('.rg[data-key]').forEach(e=>{if(e.dataset.key===k&&document.activeElement!==e)e.value=v});
+    const sw=widgets.filter(x=>x.type==='switch'),tgs=document.querySelectorAll('.tg');
+    sw.forEach((w,n)=>{if(w.key===k&&tgs[n])tgs[n].setAttribute('aria-checked',String(v==='1'))});
+  }
+  async function wr(c){if(tx.properties.writeWithoutResponse)await tx.writeValueWithoutResponse(c);else await tx.writeValue(c)}
+  let q=Promise.resolve();
+  function send(text,quiet){
+    if(!tx){if(!quiet)log('Hubungkan micro:bit dulu.','er');return}
+    q=q.then(async()=>{
+      if(!tx)return;
+      const d=enc.encode(text+'\n');
+      try{
+        for(let i=0;i<d.length;i+=20)await wr(d.slice(i,i+20));
+        if(!quiet)log('→ '+text,'tx');
+      }catch(e){log('Gagal mengirim: '+e.message,'er')}
+    });
+  }
+
+  /* Toast, jam, foto profil */
+  let tt;
+  function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800)}
+  const clk=()=>{$('clock').textContent=new Date().toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false}).replace(/\./g,':')};
+  clk();setInterval(clk,1000);
+  const setLogo=d=>{$('logoImg').src=d;document.querySelector('.av').classList.add('has-photo')};
+  try{const sv=localStorage.getItem('jokowi.logo');if(sv)setLogo(sv)}catch(e){}
+  $('logoIn').onchange=e=>{
+    const f=e.target.files[0];e.target.value='';
+    if(!f||!f.type.startsWith('image/')){toast('Pilih file gambar!');return}
+    const im=new Image(),u=URL.createObjectURL(f);
+    im.onload=()=>{
+      const c=document.createElement('canvas');c.width=c.height=96;
+      const m=Math.min(im.width,im.height);
+      c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,96,96);
+      URL.revokeObjectURL(u);const d=c.toDataURL('image/jpeg',.85);
+      setLogo(d);try{localStorage.setItem('jokowi.logo',d)}catch(e){}toast('Foto diganti!');
+    };
+    im.onerror=()=>toast('Gagal membaca foto');
+    im.src=u;
+  };
+
+  /* Pemetaan D-Pad (Settings) */
+  const DIRS=['up','down','left','right','stop'];
+  const map={up:'up',down:'down',left:'left',right:'right',stop:'stop'};
+  try{const sv=JSON.parse(localStorage.getItem('jokowi.map')||'{}');DIRS.forEach(d=>{if(typeof sv[d]==='string'&&sv[d].trim())map[d]=sv[d].trim()})}catch(e){}
+  function syncMap(){DIRS.forEach(d=>{$('pv-'+d).textContent=map[d];$('m-'+d).value=map[d]})}
+  $('btnSaveMap').onclick=()=>{
+    DIRS.forEach(d=>map[d]=$('m-'+d).value.trim()||d);
+    try{localStorage.setItem('jokowi.map',JSON.stringify(map))}catch(e){}
+    syncMap();toast('Mapping disimpan!');log('Mapping D-Pad disimpan.');
+    document.querySelector('[data-view=controller]').click();
+  };
+  syncMap();
+
+  /* Kirim dengan pembatas kecepatan (untuk widget slider) */
+  const rl={};
+  function sendRate(k,text,force){
+    const s=rl[k]||(rl[k]={last:'',t:0,timer:null,next:null});
+    if(text===s.last&&!force)return;
+    const go=t=>{s.last=t;s.t=performance.now();send(t,true)};
+    const wait=90-(performance.now()-s.t);
+    if(force||wait<=0){clearTimeout(s.timer);s.timer=null;s.next=null;go(text)}
+    else{s.next=text;if(!s.timer)s.timer=setTimeout(()=>{s.timer=null;const n=s.next;s.next=null;if(n!=null&&n!==s.last)go(n)},wait)}
+  }
+
+  /* D-Pad: tekan = kirim arah, lepas semua = kirim stop */
+  const held=[];
+  const btnOf=d=>document.querySelector('#dpad [data-cmd='+d+']');
+  function showDir(){const d=held[held.length-1];$('dst').textContent=d?d.toUpperCase():'STOP';$('dst').classList.toggle('on',!!d)}
+  function press(d){if(held.includes(d))return;held.push(d);btnOf(d).classList.add('down');showDir();send(map[d])}
+  function release(d){
+    const i=held.indexOf(d);if(i<0)return;
+    held.splice(i,1);btnOf(d).classList.remove('down');showDir();
+    send(held.length?map[held[held.length-1]]:map.stop);
+  }
+  document.querySelectorAll('#dpad button').forEach(b=>{
+    const d=b.dataset.cmd;
+    b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);press(d)});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>release(d)));
+  });
+  const KEYS={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  const kbOk=e=>!$('v-controller').hidden&&KEYS[e.key]&&!/INPUT|SELECT|TEXTAREA/.test(e.target.tagName);
+  addEventListener('keydown',e=>{if(!kbOk(e)||e.repeat)return;e.preventDefault();press(KEYS[e.key])});
+  addEventListener('keyup',e=>{if(!kbOk(e))return;e.preventDefault();release(KEYS[e.key])});
+  function dpadReset(){held.length=0;document.querySelectorAll('#dpad button.down').forEach(b=>b.classList.remove('down'));showDir()}
+  /* Keamanan: hentikan robot bila fokus hilang, tab disembunyikan, atau pindah dari Dashboard */
+  function stopAll(){const had=held.length;dpadReset();if((had||tm.run)&&tx){send(map.stop,true);tm.last=''}}
+  addEventListener('blur',stopAll);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAll()});
+
+  /* Teachable Machine */
+  const tm={model:null,cam:null,run:false,last:'',lastAt:0,map:{}};
+  $('tmTh').oninput=()=>{$('tmThV').textContent=($('tmTh').value/100).toFixed(2)};
+  try{const c=localStorage.getItem('khontrol.tmurl');if(c)$('tmUrl').value=c}catch(e){}
+  function guessCmd(label){
+    const l=String(label).trim().toLowerCase();
+    if(DIRS.includes(l))return map[l];
+    if(/up|atas|maju/.test(l))return map.up;
+    if(/down|bawah|mundur/.test(l))return map.down;
+    if(/left|kiri/.test(l))return map.left;
+    if(/right|kanan/.test(l))return map.right;
+    if(/stop|diam|idle|none|background/.test(l))return map.stop;
+    return String(label).trim();
+  }
+  function modelURL(v){
+    v=v.trim();
+    if(/^[A-Za-z0-9_-]{6,}$/.test(v))v='https://teachablemachine.withgoogle.com/models/'+v+'/'; // boleh tempel ID saja
+    const m=v.match(/^https?:\/\/[^\s"'<>]+/i);
+    if(!m)return null;
+    const u=m[0].split(/[?#]/)[0].replace(/(model|metadata)\.json$/,'');
+    return u.endsWith('/')?u:u+'/';
+  }
+  function buildMap(labels){
+    const list=$('tmList');list.textContent='';tm.map={};
+    $('tmMapBox').hidden=!labels.length;
+    labels.forEach(label=>{
+      tm.map[label]=guessCmd(label);
+      const row=el('div','tmrow'),n=el('span',null,label),i=el('input');
+      n.title=label;i.value=tm.map[label];i.setAttribute('aria-label','Perintah untuk '+label);
+      i.oninput=()=>{tm.map[label]=i.value.trim()||label};
+      row.append(n,el('span',null,'→'),i);list.appendChild(row);
+    });
+  }
+  $('tmStart').onclick=async()=>{
+    const code=$('tmUrl').value.trim();
+    if(!code){toast('Tempel shareable link Teachable Machine dulu!');return}
+    const url=modelURL(code);
+    if(!url){toast('Link tidak valid. Tempel shareable link dari Teachable Machine.');log('Object Detector: link model tidak valid.','er');return}
+    if(!window.tmImage){toast('Library detektor belum termuat. Cek internet.');return}
+    try{localStorage.setItem('khontrol.tmurl',code)}catch(e){}
+    const b=$('tmStart');b.disabled=true;b.textContent='Memuat...';
+    try{
+      tm.model=await tmImage.load(url+'model.json',url+'metadata.json');
+      let labels=tm.model.getClassLabels?tm.model.getClassLabels():[];
+      if(!labels||!labels.length){try{labels=(await fetch(url+'metadata.json').then(r=>r.json())).labels||[]}catch(e){labels=[]}}
+      buildMap(labels);
+      tm.cam=new tmImage.Webcam(320,240,true);
+      await tm.cam.setup();await tm.cam.play();
+      const cv=$('tmCv');cv.width=tm.cam.width;cv.height=tm.cam.height;cv.hidden=false;$('tmPh').hidden=true;
+      tm.run=true;tm.last='';b.textContent='Kamera aktif';$('tmStop').disabled=false;
+      toast('Kamera aktif!');log('Object Detector: model dimuat, kamera aktif.');loopTM();
+    }catch(e){
+      b.disabled=false;b.textContent='Start kamera';
+      toast('Gagal: '+(e.message||e));log('Object Detector gagal: '+(e.message||e),'er');
+    }
+  };
+  function tmStop(){
+    const was=tm.run;tm.run=false;
+    try{tm.cam&&tm.cam.stop()}catch(e){}
+    tm.cam=null;$('tmCv').hidden=true;$('tmPh').hidden=false;
+    $('tmStart').disabled=false;$('tmStart').textContent='Start kamera';$('tmStop').disabled=true;
+    $('tmLabel').textContent='—';$('tmConf').textContent='confidence: 0%';tm.last='';
+    if(was&&tx)send(map.stop,true);
+  }
+  $('tmStop').onclick=()=>{tmStop();toast('Kamera dimatikan');log('Object Detector: kamera dimatikan.')};
+  async function loopTM(){
+    if(!tm.run||!tm.cam||!tm.model)return;
+    tm.cam.update();
+    $('tmCv').getContext('2d').drawImage(tm.cam.canvas,0,0);
+    let best;
+    try{const pr=await tm.model.predict(tm.cam.canvas);best=pr.reduce((a,b)=>b.probability>a.probability?b:a)}
+    catch(e){tmStop();toast('Prediksi gagal: '+(e.message||e));return}
+    if(!tm.run)return; // dimatikan saat prediksi berjalan
+    const name=best.className.trim(),cmd=tm.map[name]??guessCmd(name);
+    $('tmLabel').textContent=name+' → '+cmd;$('tmConf').textContent='confidence: '+Math.round(best.probability*100)+'%';
+    if(best.probability>=$('tmTh').value/100){
+      const now=Date.now(),changed=cmd!==tm.last;
+      if(changed||now-tm.lastAt>600){tm.last=cmd;tm.lastAt=now;if(tx)send(cmd,!changed)}
+    }
+    requestAnimationFrame(loopTM);
+  }
+
+  render();
+  log('Siap. Klik "Hubungkan micro:bit" di sidebar.');
+})();
+
+/* Logo micro:bit di tiap judul: mata melirik kursor, klik = ekspresi berbeda tiap halaman
+   Dashboard: senang (^ ^) | Builder: kedip | Controller: semangat (> <) | Object Detector: mata membesar & memindai | Settings: mata hati */
+(()=>{
+  function eyesSVG(ex){
+    const side=(cx,l)=>{
+      let sh='';
+      if(ex==='happy'||(ex==='wink'&&!l))sh+='<path class="ex x-'+ex+'" d="M'+(cx-30)+' 270Q'+cx+' 222 '+(cx+30)+' 270"/>';
+      if(ex==='excited'){const a=cx-(l?26:-26),b=cx+(l?26:-26);sh+='<path class="ex x-excited" d="M'+a+' 232L'+b+' 257L'+a+' 282"/>'}
+      if(ex==='heart')sh+='<path class="exf x-heart" transform="translate('+cx+' 249)" d="M0 -6C-9 -30-40 -22-30 4C-24 20-8 28 0 38C8 28 24 20 30 4C40 -22 9 -30 0 -6Z"/>';
+      return '<g class="pu '+(l?'l':'r')+'" data-cx="'+cx+'" data-cy="257"><circle class="pc" cx="'+cx+'" cy="257" r="30"/>'+sh+'</g>';
+    };
+    return '<svg class="mbeyes" data-ex="'+ex+'" viewBox="0 100 512 310" aria-hidden="true"><rect x="0" y="110" width="512" height="290" rx="145" fill="currentColor"/><rect x="58" y="168" width="396" height="174" rx="87" fill="#fff"/>'+side(146,true)+side(363,false)+'</svg>';
+  }
+  document.querySelectorAll('.mbslot').forEach(sl=>{sl.outerHTML=eyesSVG(sl.dataset.ex)});
+  const logos=[...document.querySelectorAll('.mbeyes')];
+  const eyes=logos.flatMap(sv=>[...sv.querySelectorAll('.pu')].map(g=>({g,sv,x:0,y:0})));
+  const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const MAX=26; // jarak geser maksimum pupil (satuan SVG)
+  let mx=innerWidth/2,my=innerHeight/2,running=false;
+  function frame(){
+    const rects=new Map();let moving=false;
+    eyes.forEach(o=>{
+      let r=rects.get(o.sv);if(!r){r=o.sv.getBoundingClientRect();rects.set(o.sv,r)}
+      if(!r.width)return; // halaman sedang tersembunyi
+      const cx=r.left+(+o.g.dataset.cx)*r.width/512,cy=r.top+(+o.g.dataset.cy-100)*r.height/310;
+      const dx=mx-cx,dy=my-cy,d=Math.hypot(dx,dy)||1,m=Math.min(1,d/120)*MAX;
+      const tx=dx/d*m,ty=dy/d*m,k=still?1:.22;
+      o.x+=(tx-o.x)*k;o.y+=(ty-o.y)*k;
+      if(Math.abs(tx-o.x)>.05||Math.abs(ty-o.y)>.05)moving=true;
+      o.g.setAttribute('transform','translate('+o.x.toFixed(2)+' '+o.y.toFixed(2)+')');
+    });
+    if(moving)requestAnimationFrame(frame);else running=false;
+  }
+  const kick=()=>{if(!running){running=true;requestAnimationFrame(frame)}};
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;kick()},{passive:true});
+  addEventListener('pointerdown',e=>{mx=e.clientX;my=e.clientY;kick()},{passive:true});
+  addEventListener('resize',kick);addEventListener('scroll',kick,true);
+  document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',kick));
+  logos.forEach(svg=>{
+    const cls='s-'+svg.dataset.ex;let ht;
+    svg.addEventListener('click',()=>{
+      svg.classList.remove(cls);void svg.getBoundingClientRect();svg.classList.add(cls);
+      clearTimeout(ht);ht=setTimeout(()=>svg.classList.remove(cls),1400);
+    });
+  });
+  kick();
+})();
+</script>
+</body>
+</html>
