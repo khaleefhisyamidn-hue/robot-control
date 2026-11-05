@@ -229,6 +229,38 @@ textarea{width:100%;background:var(--card);color:var(--ink);border:0;border-radi
 .tmrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .tmrow>span:first-child{width:110px;font-weight:800;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tmrow input{flex:1;min-width:0;background:var(--card);color:var(--ink);border:0;border-radius:10px;padding:8px 10px}
+.tm .sel,.sel{width:100%;background:var(--card);color:var(--ink);border:0;border-radius:12px;padding:10px 12px;font:inherit}
+.pk-conn{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:980px;margin-bottom:18px}
+.pk-cs{display:flex;align-items:center;gap:10px}
+.pk-dot{width:12px;height:12px;border-radius:50%;background:#777;display:inline-block}
+.pk-dot.on{background:#3ddc84;box-shadow:0 0 12px #3ddc84aa}
+.pk-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;max-width:980px;margin-bottom:8px}
+.pk-stats .card small{opacity:.75}.pk-stats .card b{font-size:2rem}
+.pk-wheel{animation:pkspin .35s linear infinite}
+@keyframes pkspin{to{transform:rotate(360deg)}}
+.pk-h{margin:22px 0 12px;font-size:1.05rem}
+.pk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;max-width:980px}
+.pk-slot{background:rgba(0,0,0,.3);border-radius:18px;overflow:hidden}
+.pk-top{padding:16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pk-name{font-weight:800;font-size:1.1rem}
+.pk-badge{padding:6px 11px;border-radius:999px;font-size:.75rem;font-weight:800;transition:background .3s,color .3s}
+.pk-slot.free .pk-badge{background:#064e3b;color:#6ee7b7}
+.pk-slot.occupied .pk-badge{background:#7f1d1d;color:#fca5a5}
+.pk-vis{height:170px;margin:0 16px 14px;border-radius:12px;border:2px dashed #475569;display:flex;justify-content:center;align-items:center;transition:background .3s,border-color .3s}
+.pk-slot.free .pk-vis{background:#052e24;border-color:#16a34a}
+.pk-slot.occupied .pk-vis{background:#3b1018;border-color:#ef4444}
+.pk-car{width:90px;height:145px;position:relative;display:none}
+.pk-slot.occupied .pk-car{display:block;animation:pop .5s cubic-bezier(.34,1.56,.64,1) backwards}
+.pk-body{width:70px;height:130px;background:#f87171;border-radius:20px 20px 12px 12px;position:absolute;left:10px;top:7px;border:3px solid #fecaca}
+.pk-win{width:49px;height:35px;background:#172554;border-radius:9px;position:absolute;left:20px;top:28px}.pk-win.back{top:82px}
+.pk-wh{width:9px;height:29px;background:#0f172a;position:absolute}.pk-wh.l{left:0}.pk-wh.r{right:0}.pk-wh.one{top:28px}.pk-wh.two{bottom:28px}
+.pk-info{padding:0 16px 16px;font-size:.85rem;opacity:.9}
+.pk-log{max-height:220px;overflow-y:auto;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.pk-log div{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.12);overflow-wrap:anywhere}
+.pk-log span{color:#7dd3fc}
+html[data-mode=vulcan] .pk-slot{background:#141a21;border:1px solid var(--line);border-radius:8px}
+html[data-mode=vulcan] .pk-badge{border-radius:4px}
+html[data-mode=vulcan] .sel{border:1px solid var(--line);border-radius:6px}
 .view-in .card,.view-in .pv{animation:pop .5s cubic-bezier(.34,1.56,.64,1) backwards}
 .view-in .card:nth-child(2){animation-delay:.1s}.view-in .card:nth-child(3){animation-delay:.2s}
 nav .nav[data-view=teach]{font-size:.85em;letter-spacing:0;white-space:nowrap}
@@ -639,6 +671,7 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
     <button class="nav" data-view="builder">&#9874; BUILDER</button>
     <button class="nav" data-view="controller">&#10021; CONTROLLER</button>
     <button class="nav" data-view="teach">&#9673; OBJECT DETECTOR</button>
+    <button class="nav" data-view="parking">&#9641; SMART PARKING</button>
     <button class="nav" data-view="buddy">&#9672; BIT BUDDY</button>
     <button class="nav" data-view="settings">&#9881; SETTINGS</button>
     <button class="nav" data-view="feedback">&#9998; FEEDBACK</button>
@@ -741,27 +774,91 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
   <section id="v-teach" hidden>
     <h1 class="pill"><i></i>OBJECT DETECTOR<span class="mbslot" data-ex="scan"></span></h1>
     <h2 class="sub">detect now!</h2>
-    <div class="tip tb"><b>Tips pemula</b><p>Latih model di Teachable Machine, salin shareable link-nya ke sini, lalu tekan Start kamera. Beri nama class up, down, left, right, atau stop.</p></div>
-    <div class="tip tp"><b>Catatan teknis</b><p>Inferensi berjalan di browser (Teachable Machine, TensorFlow.js). Nama class dikirim sebagai perintah hanya jika confidence ≥ threshold (0,50–0,99), saat berubah dan diulang berkala selama class yang sama bertahan.</p></div>
-    <div class="tm">
-      <div class="card">
-        <label class="lb" for="tmUrl">Shareable link Teachable Machine</label>
-        <input id="tmUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://teachablemachine.withgoogle.com/models/xxxx/">
-        <p class="hint2">Di Teachable Machine: Export Model, tab Tensorflow.js, pilih Upload my model, lalu salin shareable link-nya. Nama class = perintah (up, down, left, right, stop).</p>
-        <label class="lb">Threshold <b id="tmThV">0.75</b><input class="rg" id="tmTh" type="range" min="50" max="99" value="75"></label>
-        <p class="hint2">Perintah hanya dikirim jika confidence sama atau di atas threshold.</p>
+    <div class="tip tb"><b>Tips pemula</b><p>AI Vision (hand gesture): latih model gestur tangan di Teachable Machine, salin shareable link-nya ke sini, lalu tekan Start kamera. Deteksi mobil ada di menu Smart Parking.</p></div>
+    <div class="tip tp"><b>Catatan teknis</b><p>Model Teachable Machine (TensorFlow.js, inferensi di browser); hanya satu kamera aktif pada satu waktu (juga terhadap kamera Smart Parking). Nama class dikirim sebagai perintah jika confidence ≥ threshold (0,50–0,99), saat berubah dan diulang berkala selama class yang sama bertahan.</p></div>
+      <div class="tm">
+        <div class="card">
+          <label class="lb" for="tmUrl">Shareable link Teachable Machine</label>
+          <input id="tmUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://teachablemachine.withgoogle.com/models/xxxx/">
+          <p class="hint2">Latih class gestur tangan: up, down, left, right, stop (atau grip/kepal dan release/telapak). Di Teachable Machine: Export Model, tab Tensorflow.js, Upload my model, lalu salin shareable link-nya.</p>
+          <label class="lb">Threshold <b id="tmThV">0.75</b><input class="rg" id="tmTh" type="range" min="50" max="99" value="75"></label>
+          <p class="hint2">Perintah hanya dikirim jika confidence sama atau di atas threshold.</p>
+        </div>
+        <div class="card">
+          <div class="cam"><canvas id="tmCv" hidden></canvas><div id="tmPh"><b>Kamera belum aktif</b><br>Tempel shareable link lalu tekan Start kamera</div></div>
+          <div class="row2"><button class="btn" id="tmStart">Start kamera</button><button class="btn ghost" id="tmStop" disabled>Stop</button></div>
+          <div class="pred"><small>Prediksi</small><b id="tmLabel">—</b><span id="tmConf">confidence: 0%</span></div>
+        </div>
+        <div class="card" id="tmMapBox" hidden>
+          <h3>Class → perintah</h3>
+          <p class="hint2">Sesuai class training. Bisa diubah manual.</p>
+          <div id="tmList"></div>
+        </div>
       </div>
-      <div class="card">
-        <div class="cam"><canvas id="tmCv" hidden></canvas><div id="tmPh"><b>Kamera belum aktif</b><br>Tempel shareable link lalu tekan Start kamera</div></div>
-        <div class="row2"><button class="btn" id="tmStart">Start kamera</button><button class="btn ghost" id="tmStop" disabled>Stop</button></div>
-        <div class="pred"><small>Prediksi</small><b id="tmLabel">—</b><span id="tmConf">confidence: 0%</span></div>
-      </div>
-      <div class="card" id="tmMapBox" hidden>
-        <h3>Class → perintah</h3>
-        <p class="hint2">Sesuai class training. Bisa diubah manual.</p>
-        <div id="tmList"></div>
-      </div>
+  </section>
+
+  <section id="v-parking" hidden>
+    <h1 class="pill"><i></i>SMART PARKING<span class="mbslot" data-ex="scan"></span></h1>
+    <h2 class="sub">park smart!</h2>
+    <div class="tip tb"><b>Tips pemula</b><p>Klik maskot micro:bit di judul untuk melihat dia kabur naik mobil. Hubungkan micro:bit, lalu lihat slot parkir berubah merah saat ada mobil. Kamera Teachable Machine bisa mendeteksi mobil otomatis (class dikirim sesuai namanya), dan tombol Buka/Tutup Palang tetap tersedia. Sensor micro:bit mengirim masuk1 sampai masuk3 dan keluar1 sampai keluar3.</p></div>
+    <div class="tip tp"><b>Catatan teknis</b><p>Memakai koneksi BLE Nordic UART yang sama dengan menu Controller (service 6e400001-b5a3-f393-e0a9-e50e24dcca9e). Masuk: masuk1–3 / keluar1–3 (newline). Keluar: "mobil" (buka palang) dan "kosong" (tutup palang). Kamera Teachable Machine (threshold default 0,85) mengirim nama class apa adanya dan memperbarui slot yang dipilih.</p></div>
+    <div class="card pk-conn">
+      <div class="pk-cs"><i class="pk-dot" id="pkDot"></i><div><b id="pkConnText">Bluetooth belum terhubung</b></div></div>
+      <div class="row2"><button class="btn" id="pkConnect">Hubungkan micro:bit</button><button class="btn ghost" id="pkDisc" hidden>Putuskan</button></div>
     </div>
+    <div class="pk-stats">
+      <div class="card"><small>Total Parkiran</small><b>3</b></div>
+      <div class="card"><small>Parkiran Terisi</small><b id="pkOcc">0</b></div>
+      <div class="card"><small>Parkiran Kosong</small><b id="pkFree">3</b></div>
+    </div>
+    <h3 class="pk-h">Status Parkiran</h3>
+    <div class="pk-grid">
+        <div class="pk-slot free" id="pkSlot1">
+          <div class="pk-top"><div class="pk-name">Parkiran 1</div><div class="pk-badge" id="pkBadge1">KOSONG</div></div>
+          <div class="pk-vis"><div class="pk-car"><div class="pk-body"></div><div class="pk-win"></div><div class="pk-win back"></div><div class="pk-wh l one"></div><div class="pk-wh r one"></div><div class="pk-wh l two"></div><div class="pk-wh r two"></div></div></div>
+          <div class="pk-info">Sensor: <strong>P0</strong><br>Status: <strong id="pkStatus1">Tidak ada mobil</strong></div>
+        </div>
+        <div class="pk-slot free" id="pkSlot2">
+          <div class="pk-top"><div class="pk-name">Parkiran 2</div><div class="pk-badge" id="pkBadge2">KOSONG</div></div>
+          <div class="pk-vis"><div class="pk-car"><div class="pk-body"></div><div class="pk-win"></div><div class="pk-win back"></div><div class="pk-wh l one"></div><div class="pk-wh r one"></div><div class="pk-wh l two"></div><div class="pk-wh r two"></div></div></div>
+          <div class="pk-info">Sensor: <strong>P1</strong><br>Status: <strong id="pkStatus2">Tidak ada mobil</strong></div>
+        </div>
+        <div class="pk-slot free" id="pkSlot3">
+          <div class="pk-top"><div class="pk-name">Parkiran 3</div><div class="pk-badge" id="pkBadge3">KOSONG</div></div>
+          <div class="pk-vis"><div class="pk-car"><div class="pk-body"></div><div class="pk-win"></div><div class="pk-win back"></div><div class="pk-wh l one"></div><div class="pk-wh r one"></div><div class="pk-wh l two"></div><div class="pk-wh r two"></div></div></div>
+          <div class="pk-info">Sensor: <strong>P2</strong><br>Status: <strong id="pkStatus3">Tidak ada mobil</strong></div>
+        </div>
+    </div>
+    <h3 class="pk-h">Deteksi Mobil (Teachable Machine)</h3>
+      <div class="tm">
+        <div class="card">
+          <label class="lb" for="tpUrl">Shareable link Teachable Machine</label>
+          <input id="tpUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://teachablemachine.withgoogle.com/models/xxxx/">
+          <p class="hint2">Latih class sesuai kebutuhan, misalnya mobil dan kosong. Yang dikirim ke micro:bit adalah nama class persis seperti di Teachable Machine (bisa diubah di tabel Class → perintah).</p>
+          <label class="lb">Threshold <b id="tpThV">0.85</b><input class="rg" id="tpTh" type="range" min="50" max="99" value="85"></label>
+          <p class="hint2">Perintah hanya dikirim jika confidence sama atau di atas threshold.</p>
+        <label class="lb" for="tpSlot">Slot yang dipantau kamera</label>
+        <select id="tpSlot" class="sel"><option value="1">Parkiran 1</option><option value="2">Parkiran 2</option><option value="3">Parkiran 3</option></select>
+        <p class="hint2">Class yang berarti kosong (kosong, empty, none, dst.) = slot kosong; selain itu = terisi.</p>
+        </div>
+        <div class="card">
+          <div class="cam"><canvas id="tpCv" hidden></canvas><div id="tpPh"><b>Kamera belum aktif</b><br>Tempel shareable link lalu tekan Start kamera</div></div>
+          <div class="row2"><button class="btn" id="tpStart">Start kamera</button><button class="btn ghost" id="tpStop" disabled>Stop</button></div>
+          <div class="pred"><small>Prediksi</small><b id="tpLabel">—</b><span id="tpConf">confidence: 0%</span></div>
+        </div>
+        <div class="card" id="tpMapBox" hidden>
+          <h3>Class → perintah</h3>
+          <p class="hint2">Sesuai class training. Bisa diubah manual.</p>
+          <div id="tpList"></div>
+        </div>
+      </div>
+    <h3 class="pk-h">Kontrol Servo</h3>
+    <div class="card">
+      <p class="hint2">Kirim perintah ke micro:bit untuk membuka atau menutup palang parkir.</p>
+      <div class="row2"><button class="btn" id="pkOpen">Buka Palang</button><button class="btn ghost" id="pkClose">Tutup Palang</button></div>
+    </div>
+    <h3 class="pk-h">Log Sensor</h3>
+    <div class="card"><div class="pk-log" id="pkLog" role="log" aria-live="polite"></div></div>
   </section>
 
   <section id="v-settings" hidden>
@@ -934,7 +1031,7 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
     if(b.dataset.view!=='controller'&&!$('v-controller').hidden)stopAll();
     document.querySelectorAll('.nav').forEach(x=>{x.classList.toggle('on',x===b);if(x===b)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')});
     document.querySelector('.panel').scrollTop=0;
-    ['dashboard','builder','controller','teach','settings','feedback','creator','buddy'].forEach(v=>{const s=$('v-'+v);s.hidden=v!==b.dataset.view;s.classList.remove('view-in');if(!s.hidden){void s.offsetWidth;s.classList.add('view-in')}});
+    ['dashboard','builder','controller','teach','parking','settings','feedback','creator','buddy'].forEach(v=>{const s=$('v-'+v);s.hidden=v!==b.dataset.view;s.classList.remove('view-in');if(!s.hidden){void s.offsetWidth;s.classList.add('view-in')}});
   });
 
   /* Render dashboard */
@@ -1024,10 +1121,12 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
     $('dot').classList.remove('wait');$('dot').classList.toggle('on',on);$('stText').textContent=txt;
     $('btnBt').hidden=on;$('btnBt').disabled=false;
     $('btnDisc').hidden=!on;$('btnDisc').textContent='Putuskan';$('btnDisc').disabled=false;
+    pkConn(on,txt);
   }
   function setWait(txt){
     $('dot').classList.remove('on');$('dot').classList.add('wait');$('stText').textContent=txt;
     $('btnBt').hidden=true;$('btnDisc').hidden=false;$('btnDisc').textContent='Batal';$('btnDisc').disabled=false;
+    $('pkConnText').textContent=txt;
   }
   if(!navigator.bluetooth){$('btnBt').disabled=true;$('stText').textContent='Web Bluetooth tidak didukung. Pakai Chrome/Edge.'}
   let busy=false,userDisc=false,rx=null;
@@ -1134,7 +1233,7 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
   addEventListener('pagehide',()=>{if(dev&&dev.gatt&&dev.gatt.connected){userDisc=true;dev.gatt.disconnect()}});
 
   let flushT=null;
-  function rxLine(line){line=line.trim();if(!line)return;log('← '+line,'rx');handle(line)}
+  function rxLine(line){line=line.trim();if(!line)return;log('← '+line,'rx');handle(line);parkRx(line)}
   function onData(ev){
     buf+=dec.decode(ev.target.value,{stream:true});
     const p=buf.split('\n');buf=p.pop();
@@ -1255,22 +1354,20 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
   addEventListener('blur',stopAll);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAll()});
 
-  /* Teachable Machine */
-  const tm={model:null,cam:null,run:false,last:'',lastAt:0,map:{}};
-  $('tmTh').oninput=()=>{$('tmThV').textContent=($('tmTh').value/100).toFixed(2)};
-  try{const c=localStorage.getItem('khontrol.tmurl');if(c)$('tmUrl').value=c}catch(e){}
+  /* Teachable Machine: dua segmen (AI Vision dan Smart Parking), satu kamera aktif */
   function guessCmd(label){
     const l=String(label).trim().toLowerCase();
     if(DIRS.includes(l))return map[l];
-    if(/grip|grab|capit|jepit|ambil/.test(l))return map.grip;
-    if(/release|lepas|drop|taruh|buka/.test(l))return map.release;
+    if(/grip|grab|capit|jepit|ambil|fist|kepal/.test(l))return map.grip;
+    if(/release|lepas|drop|taruh|buka|palm|telapak/.test(l))return map.release;
     if(/up|atas|maju/.test(l))return map.up;
     if(/down|bawah|mundur/.test(l))return map.down;
     if(/left|kiri/.test(l))return map.left;
     if(/right|kanan/.test(l))return map.right;
-    if(/stop|diam|idle|none|background/.test(l))return map.stop;
+    if(/stop|diam|idle|none|background|netral/.test(l))return map.stop;
     return String(label).trim();
   }
+  const isFree=l=>/kosong|empty|free|tidak|none|background|no.?car/.test(String(l).toLowerCase());
   function modelURL(v){
     v=v.trim();
     if(/^[A-Za-z0-9_-]{6,}$/.test(v))v='https://teachablemachine.withgoogle.com/models/'+v+'/'; // boleh tempel ID saja
@@ -1279,65 +1376,124 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
     const u=m[0].split(/[?#]/)[0].replace(/(model|metadata)\.json$/,'');
     return u.endsWith('/')?u:u+'/';
   }
-  function buildMap(labels){
-    const list=$('tmList');list.textContent='';tm.map={};
-    $('tmMapBox').hidden=!labels.length;
-    labels.forEach(label=>{
-      tm.map[label]=guessCmd(label);
-      const row=el('div','tmrow'),n=el('span',null,label),i=el('input');
-      n.title=label;i.value=tm.map[label];i.setAttribute('aria-label','Perintah untuk '+label);
-      i.oninput=()=>{tm.map[label]=i.value.trim()||label};
-      row.append(n,el('span',null,'→'),i);list.appendChild(row);
-    });
-  }
-  $('tmStart').onclick=async()=>{
-    const code=$('tmUrl').value.trim();
-    if(!code){toast('Tempel shareable link Teachable Machine dulu!');return}
-    const url=modelURL(code);
-    if(!url){toast('Link tidak valid. Tempel shareable link dari Teachable Machine.');log('Object Detector: link model tidak valid.','er');return}
-    if(!window.tmImage){toast('Library detektor belum termuat. Cek internet.');return}
-    try{localStorage.setItem('khontrol.tmurl',code)}catch(e){}
-    const b=$('tmStart');b.disabled=true;b.textContent='Memuat...';
-    try{
-      tm.model=await tmImage.load(url+'model.json',url+'metadata.json');
-      let labels=tm.model.getClassLabels?tm.model.getClassLabels():[];
-      if(!labels||!labels.length){try{labels=(await fetch(url+'metadata.json').then(r=>r.json())).labels||[]}catch(e){labels=[]}}
-      buildMap(labels);
-      tm.cam=new tmImage.Webcam(320,240,true);
-      await tm.cam.setup();await tm.cam.play();
-      const cv=$('tmCv');cv.width=tm.cam.width;cv.height=tm.cam.height;cv.hidden=false;$('tmPh').hidden=true;
-      tm.run=true;tm.last='';b.textContent='Kamera aktif';$('tmStop').disabled=false;
-      toast('Kamera aktif!');log('Object Detector: model dimuat, kamera aktif.');loopTM();
-    }catch(e){
-      b.disabled=false;b.textContent='Start kamera';
-      toast('Gagal: '+(e.message||e));log('Object Detector gagal: '+(e.message||e),'er');
+  const tms=[];
+  function createTM(o){
+    const p=o.p,g=id=>$(p+id);
+    const tm={model:null,cam:null,run:false,last:'',lastAt:0,map:{}};
+    g('Th').oninput=()=>{g('ThV').textContent=(g('Th').value/100).toFixed(2)};
+    try{const c=localStorage.getItem(o.key);if(c)g('Url').value=c}catch(e){}
+    function buildMap(labels){
+      const list=g('List');list.textContent='';tm.map={};
+      g('MapBox').hidden=!labels.length;
+      labels.forEach(label=>{
+        tm.map[label]=o.guess(label);
+        const row=el('div','tmrow'),n=el('span',null,label),i=el('input');
+        n.title=label;i.value=tm.map[label];i.setAttribute('aria-label','Perintah untuk '+label);
+        i.oninput=()=>{tm.map[label]=i.value.trim()||label};
+        row.append(n,el('span',null,'→'),i);list.appendChild(row);
+      });
     }
-  };
-  function tmStop(){
-    const was=tm.run;tm.run=false;
-    try{tm.cam&&tm.cam.stop()}catch(e){}
-    tm.cam=null;$('tmCv').hidden=true;$('tmPh').hidden=false;
-    $('tmStart').disabled=false;$('tmStart').textContent='Start kamera';$('tmStop').disabled=true;
-    $('tmLabel').textContent='—';$('tmConf').textContent='confidence: 0%';tm.last='';
-    if(was&&tx)send(map.stop,true);
-  }
-  $('tmStop').onclick=()=>{tmStop();toast('Kamera dimatikan');log('Object Detector: kamera dimatikan.')};
-  async function loopTM(){
-    if(!tm.run||!tm.cam||!tm.model)return;
-    tm.cam.update();
-    $('tmCv').getContext('2d').drawImage(tm.cam.canvas,0,0);
-    let best;
-    try{const pr=await tm.model.predict(tm.cam.canvas);best=pr.reduce((a,b)=>b.probability>a.probability?b:a)}
-    catch(e){tmStop();toast('Prediksi gagal: '+(e.message||e));return}
-    if(!tm.run)return; // dimatikan saat prediksi berjalan
-    const name=best.className.trim(),cmd=tm.map[name]??guessCmd(name);
-    $('tmLabel').textContent=name+' → '+cmd;$('tmConf').textContent='confidence: '+Math.round(best.probability*100)+'%';
-    if(best.probability>=$('tmTh').value/100){
-      const now=Date.now(),changed=cmd!==tm.last;
-      if(changed||now-tm.lastAt>600){tm.last=cmd;tm.lastAt=now;if(tx)send(cmd,!changed)}
+    function stop(quiet){
+      const was=tm.run;tm.run=false;
+      try{tm.cam&&tm.cam.stop()}catch(e){}
+      tm.cam=null;g('Cv').hidden=true;g('Ph').hidden=false;
+      g('Start').disabled=false;g('Start').textContent='Start kamera';g('Stop').disabled=true;
+      g('Label').textContent='—';g('Conf').textContent='confidence: 0%';tm.last='';
+      if(was&&!quiet&&o.onStop)o.onStop();
     }
-    requestAnimationFrame(loopTM);
+    g('Start').onclick=async()=>{
+      const code=g('Url').value.trim();
+      if(!code){toast('Tempel shareable link Teachable Machine dulu!');return}
+      const url=modelURL(code);
+      if(!url){toast('Link tidak valid. Tempel shareable link dari Teachable Machine.');log('Object Detector: link model tidak valid.','er');return}
+      if(!window.tmImage){toast('Library detektor belum termuat. Cek internet.');return}
+      tms.forEach(t=>{if(t!==api&&t.running())t.stop(false)}); // hanya satu kamera aktif
+      try{localStorage.setItem(o.key,code)}catch(e){}
+      const b=g('Start');b.disabled=true;b.textContent='Memuat...';
+      try{
+        tm.model=await tmImage.load(url+'model.json',url+'metadata.json');
+        let labels=tm.model.getClassLabels?tm.model.getClassLabels():[];
+        if(!labels||!labels.length){try{labels=(await fetch(url+'metadata.json').then(r=>r.json())).labels||[]}catch(e){labels=[]}}
+        buildMap(labels);
+        tm.cam=new tmImage.Webcam(320,240,true);
+        await tm.cam.setup();await tm.cam.play();
+        const cv=g('Cv');cv.width=tm.cam.width;cv.height=tm.cam.height;cv.hidden=false;g('Ph').hidden=true;
+        tm.run=true;tm.last='';b.textContent='Kamera aktif';g('Stop').disabled=false;
+        toast('Kamera aktif!');log('Object Detector ('+o.name+'): model dimuat, kamera aktif.');loop();
+      }catch(e){
+        b.disabled=false;b.textContent='Start kamera';
+        toast('Gagal: '+(e.message||e));log('Object Detector gagal: '+(e.message||e),'er');
+      }
+    };
+    g('Stop').onclick=()=>{stop(false);toast('Kamera dimatikan');log('Object Detector ('+o.name+'): kamera dimatikan.')};
+    async function loop(){
+      if(!tm.run||!tm.cam||!tm.model)return;
+      tm.cam.update();
+      g('Cv').getContext('2d').drawImage(tm.cam.canvas,0,0);
+      let best;
+      try{const pr=await tm.model.predict(tm.cam.canvas);best=pr.reduce((a,b)=>b.probability>a.probability?b:a)}
+      catch(e){stop(false);toast('Prediksi gagal: '+(e.message||e));return}
+      if(!tm.run)return; // dimatikan saat prediksi berjalan
+      const name=best.className.trim(),cmd=tm.map[name]??o.guess(name);
+      g('Label').textContent=name+' → '+cmd;g('Conf').textContent='confidence: '+Math.round(best.probability*100)+'%';
+      if(best.probability>=g('Th').value/100){
+        const now=Date.now(),changed=cmd!==tm.last;
+        if(changed||now-tm.lastAt>600){tm.last=cmd;tm.lastAt=now;o.onHit(name,cmd,changed)}
+      }
+      requestAnimationFrame(loop);
+    }
+    const api={tm,stop,running:()=>tm.run};
+    tms.push(api);return api;
   }
+  const vision=createTM({p:'tm',key:'khontrol.tmurl',name:'AI Vision',guess:guessCmd,
+    onHit:(name,cmd,changed)=>{if(tx)send(cmd,!changed)},
+    onStop:()=>{if(tx)send(map.stop,true)}});
+  const tm=vision.tm; // dipakai stopAll
+  const parkTM=createTM({p:'tp',key:'khontrol.tpurl',name:'Smart Parking',guess:l=>String(l).trim(),
+    onHit:(name,cmd,changed)=>{
+      if(changed){
+        const occ=!isFree(name);
+        setParking($('tpSlot').value,occ);
+        pkLog('KAMERA','Slot '+$('tpSlot').value+': '+name);
+      }
+      if(tx)send(cmd,!changed);
+      if(changed)pkLog('WEBSITE','Perintah dikirim: '+cmd);
+    }});
+  /* Smart Parking (dashboard) */
+  const parking={1:false,2:false,3:false};
+  function pkLog(src,msg){
+    const L=$('pkLog'),d=document.createElement('div'),s=document.createElement('span');
+    s.textContent='['+new Date().toLocaleTimeString('id-ID')+'] ['+src+'] ';
+    d.append(s,msg);L.prepend(d);
+    while(L.children.length>50)L.removeChild(L.lastElementChild);
+  }
+  function setParking(n,occ){
+    n=String(n);if(!(n in parking))return;
+    parking[n]=occ;
+    $('pkSlot'+n).classList.toggle('free',!occ);$('pkSlot'+n).classList.toggle('occupied',occ);
+    $('pkBadge'+n).textContent=occ?'TERISI':'KOSONG';
+    $('pkStatus'+n).textContent=occ?'Ada mobil':'Tidak ada mobil';
+    const o=Object.values(parking).filter(Boolean).length;
+    $('pkOcc').textContent=o;$('pkFree').textContent=3-o;
+  }
+  function parkRx(line){
+    pkLog('MICRO:BIT',line);
+    const m=line.trim().toLowerCase().match(/^(masuk|keluar)\s*([123])$/);
+    if(m)setParking(m[2],m[1]==='masuk');
+  }
+  function pkSend(cmd){
+    if(!tx){toast('Hubungkan micro:bit terlebih dahulu!');return}
+    send(cmd);pkLog('WEBSITE','Perintah dikirim: '+cmd);
+  }
+  $('pkOpen').onclick=()=>pkSend('mobil');
+  $('pkClose').onclick=()=>pkSend('kosong');
+  $('pkConnect').onclick=()=>$('btnBt').click();
+  $('pkDisc').onclick=()=>$('btnDisc').click();
+  function pkConn(on,txt){
+    $('pkDot').classList.toggle('on',on);$('pkConnText').textContent=txt;
+    $('pkConnect').hidden=on;$('pkDisc').hidden=!on;
+  }
+  pkLog('SYSTEM','Menunggu koneksi micro:bit...');
 
   render();
   log('Siap. Klik "Hubungkan micro:bit" di sidebar.');
@@ -1451,8 +1607,45 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
       svg.style.visibility='';scareBusy=false;
     }
   }
+  /* Maskot Smart Parking: klik -> naik mobil lalu kabur ke kanan -> kembali */
+  async function driveAway(svg){
+    if(scareBusy||!svg.animate)return;
+    const r=svg.getBoundingClientRect();
+    if(!r.width||!r.height)return;
+    scareBusy=true;
+    let wrap=null;
+    try{
+      if(reducedMotion){svg.style.visibility='hidden';await wait(1200);return}
+      const carW=Math.max(r.width*2.8,120),carH=carW*.4,bodyTop=carH*18/64,ov=carH*.14;
+      wrap=document.createElement('div');
+      wrap.style.cssText='position:fixed;left:'+(r.left+r.width/2-carW/2)+'px;top:'+(r.top+r.height-bodyTop-ov)+'px;width:'+carW+'px;height:'+carH+'px;z-index:8001;pointer-events:none';
+      const cl=svg.cloneNode(true);
+      cl.querySelectorAll('.pu').forEach(g=>g.setAttribute('transform','translate(20 0)')); // menatap ke depan
+      cl.style.cssText='position:absolute;left:'+((carW-r.width)/2)+'px;top:'+(bodyTop+ov-r.height)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;visibility:visible';
+      wrap.appendChild(cl);
+      const car=document.createElement('div');
+      car.style.cssText='position:absolute;inset:0';
+      car.innerHTML='<svg viewBox="0 0 160 64" width="100%" height="100%" aria-hidden="true"><path d="M6 30Q6 18 20 18H128Q146 20 152 32Q158 36 156 46Q156 52 148 52H12Q4 52 4 44Z" fill="#ef4444"/><path d="M100 18L118 6H128L132 18Z" fill="#7dd3fc" opacity=".9"/><rect x="10" y="30" width="136" height="4" fill="#b91c1c"/><rect x="146" y="34" width="9" height="7" rx="3" fill="#fde047"/><g class="pk-wheel" style="transform-origin:34px 52px"><circle cx="34" cy="52" r="11" fill="#0f172a"/><circle cx="34" cy="52" r="4" fill="#94a3b8"/><path d="M34 44V60M26 52H42" stroke="#94a3b8" stroke-width="2"/></g><g class="pk-wheel" style="transform-origin:122px 52px"><circle cx="122" cy="52" r="11" fill="#0f172a"/><circle cx="122" cy="52" r="4" fill="#94a3b8"/><path d="M122 44V60M114 52H130" stroke="#94a3b8" stroke-width="2"/></g></svg>';
+      wrap.appendChild(car);
+      document.body.appendChild(wrap);
+      svg.style.visibility='hidden';
+      // mobil datang dari kiri
+      await wrap.animate([{transform:'translateX('+(-(r.left+carW+60))+'px)'},{transform:'translateX(0)'}],{duration:650,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).finished;
+      // panaskan mesin
+      await wrap.animate([{transform:'translate(0,0)'},{transform:'translate(-6px,1px)'},{transform:'translate(0,-1px)'},{transform:'translate(-6px,0)'},{transform:'translate(0,0)'}],{duration:110,iterations:4}).finished;
+      // kabur ke kanan
+      await wrap.animate([{transform:'translateX(0)'},{transform:'translateX(-14px)',offset:.12},{transform:'translateX('+(innerWidth-(r.left+r.width/2-carW/2)+80)+'px)'}],{duration:1000,easing:'cubic-bezier(.6,0,1,.6)',fill:'forwards'}).finished;
+      wrap.remove();wrap=null;
+      await wait(1100);
+      // kembali muncul
+      svg.style.visibility='';
+      await svg.animate([{opacity:0,transform:'translateX(-60px) scale(.5)'},{opacity:1,transform:'translateY(-6px) scale(1.1)',offset:.7},{opacity:1,transform:'none'}],{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}).finished;
+    }catch(e){}
+    finally{if(wrap)wrap.remove();svg.style.visibility='';scareBusy=false}
+  }
   logos.forEach(svg=>{
     const cls='s-'+svg.dataset.ex;let ht;
+    if(svg.closest('#v-parking')){svg.addEventListener('click',()=>driveAway(svg));return}
     if(svg.dataset.ex==='heart'){svg.addEventListener('click',()=>scareFall(svg));return}
     svg.addEventListener('click',()=>{
       svg.classList.remove(cls);void svg.getBoundingClientRect();svg.classList.add(cls);
@@ -1538,7 +1731,7 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
 (()=>{
   const KEY='jokowi.mode',root=document.documentElement;
   const NAMES={buddy:'BIT BUDDY',vulcan:'VULCAN'};
-  const PRO={dashboard:'system overview',builder:'widget configuration',controller:'manual control',teach:'vision-based control',settings:'command mapping',feedback:'send feedback',creator:'about the developer'};
+  const PRO={dashboard:'system overview',builder:'widget configuration',controller:'manual control',teach:'vision-based control',parking:'parking monitor',settings:'command mapping',feedback:'send feedback',creator:'about the developer'};
   const emb=document.getElementById('vEmb').src;
   const mk=c=>{const i=new Image();i.className=c;i.alt='';i.src=emb;return i};
   document.querySelectorAll('h1.pill').forEach(h=>h.appendChild(mk('vlogo')));  // logo Vulcan di tiap judul halaman
