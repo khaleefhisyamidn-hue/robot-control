@@ -409,6 +409,10 @@ html[data-mode=vulcan] .cr-stars,html[data-mode=vulcan] .cr-pfp::before{display:
 .pill{min-height:48px}
 .vlogo{display:none;height:30px;width:auto;margin-left:10px;filter:invert(1)}
 .vlogo.think{animation:vpulse 1.1s ease-in-out infinite}
+.vlogo,.vbrand{animation:vfloat 3s ease-in-out infinite;will-change:transform}
+.vbrand{animation-duration:3.6s;animation-delay:-1.2s}
+@keyframes vfloat{0%,100%{transform:translateY(3px)}50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.vlogo,.vbrand{animation:none}}
 @keyframes vpulse{0%,100%{opacity:.45;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}
 .bb-who{display:flex;align-items:center;gap:6px}
 .bb-who img{height:12px;width:auto;opacity:.8}
@@ -905,6 +909,14 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
       <label>CAPIT (menjepit barang)<input id="m-grip" maxlength="30" autocomplete="off"></label>
       <label>LEPAS CAPIT (melepas barang)<input id="m-release" maxlength="30" autocomplete="off"></label>
       <button class="btn" id="btnSaveMap">Simpan mapping</button>
+    </div>
+    <h3 class="pk-h" id="gkH">API Chat AI (Groq)</h3>
+    <p class="hint2">Bit Buddy dan Vulcan memakai Groq dengan model OpenAI GPT-OSS. Tempel API key Groq-mu di sini (gratis di console.groq.com/keys). Key disimpan hanya di browser ini (localStorage), tidak ikut di file website.</p>
+    <div class="form" id="gkForm">
+      <label>Groq API key<input id="gkKey" type="password" autocomplete="off" spellcheck="false" placeholder="gsk_..."></label>
+      <label>Model<select id="gkModel" class="sel"><option value="openai/gpt-oss-120b">openai/gpt-oss-120b (paling pintar)</option><option value="openai/gpt-oss-20b">openai/gpt-oss-20b (lebih cepat)</option></select></label>
+      <div class="row2" style="grid-column:1/-1;flex-wrap:wrap"><button class="btn" id="gkSave" type="button">Simpan key</button><button class="btn ghost" id="gkTest" type="button">Tes koneksi</button><button class="btn ghost" id="gkShow" type="button">Tampilkan</button><button class="btn ghost" id="gkDel" type="button">Hapus key</button></div>
+      <p class="hint2" id="gkMsg" role="status" style="grid-column:1/-1">Belum ada API key.</p>
     </div>
   </section>
 
@@ -1897,9 +1909,9 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
 /* Bit Buddy (pemula) + Vulcan (profesional) */
 (()=>{
   const $=id=>document.getElementById(id);
-  const API='https://api.anthropic.com/v1/messages';
-  const API_KEY='cc_IVeKk6zU9hqSD2Z2REc4xYmnv6maJhbuuS6bnfv2z3MASWZh'; // API key untuk chat Bit Buddy / Vulcan
-  const HEAD=Object.assign({'Content-Type':'application/json'},API_KEY?{'x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}:{});
+  const API='https://api.groq.com/openai/v1/chat/completions';
+  const getKey=()=>{try{return(localStorage.getItem('khontrol.groqkey')||'').trim()}catch(e){return''}};
+  const getModel=()=>{try{return localStorage.getItem('khontrol.groqmodel')||'openai/gpt-oss-120b'}catch(e){return'openai/gpt-oss-120b'}};
   const KB='Fokusmu: micro:bit, MakeCode (blok dan JavaScript), Bluetooth UART, sensor, robot sederhana, Teachable Machine, dan cara memakai website ini. '
     +'Cara kerja website: Dashboard menampilkan widget buatan Builder. Switch mengirim "kunci:1" atau "kunci:0", Sensor menampilkan nilai dari baris "kunci:nilai" yang dikirim micro:bit, Tombol mengirim "kunci:1", Slider mengirim "kunci:angka". '
     +'Controller punya D-Pad (up, down, left, right, stop) dan teks yang dikirim bisa diubah di Settings. '
@@ -1937,7 +1949,16 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
         ['Debug koneksi BLE','Berikan prosedur debugging yang sistematis untuk koneksi Web Bluetooth ke micro:bit yang gagal atau sering terputus.']]
     }
   };
-  const ERR='Chat AI belum bisa dihubungi. Chat AI hanya aktif saat website ini dibuka lewat claude.ai (pratinjau artifact); kalau dibuka dari file di komputer, koneksinya tidak tersedia. Pesanmu kukembalikan ke kotak ketik.';
+  const CALL_REPLY='Siap King Kolip, apa yang harus saya bantu?';
+  const CALL_RE=/^(halo+|hallo+|hai+|hi+|hey+|hei+|hello+|oi+|woi+|p|permisi|pagi|siang|sore|malam)?( ?(bit ?buddy|bitbuddy|bit|buddy))?( ?(dong|ya|nih|yuk|dulu))?$/;
+  function isCall(t){
+    const n=String(t).toLowerCase().replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
+    return n.length>0&&CALL_RE.test(n);
+  }
+  const ERR='Chat AI belum bisa dihubungi. Cek koneksi internet dan API key Groq-mu di menu Settings. Pesanmu kukembalikan ke kotak ketik.';
+  const ERR_KEY='Belum ada API key Groq. Buka menu Settings, tempel API key di bagian "API Chat AI (Groq)", lalu simpan. Pesanmu kukembalikan ke kotak ketik.';
+  const ERR_AUTH='API key Groq ditolak (tidak valid). Periksa key di menu Settings. Pesanmu kukembalikan ke kotak ketik.';
+  const ERR_RATE='Batas pemakaian Groq tercapai. Tunggu sebentar lalu coba lagi. Pesanmu kukembalikan ke kotak ketik.';
   const inp=$('bbIn'),sendB=$('bbSend'),chips=$('bbChips'),sec=$('v-buddy');
   const logo=()=>document.querySelector('#v-buddy .mbeyes');
   const vlogo=()=>document.querySelector('#v-buddy .vlogo');
@@ -2016,18 +2037,30 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
     const k=mode,st=S[k],g=st.gen;
     st.started=true;chips.hidden=true;inp.value='';grow();
     add(k,'me',txt);st.history.push({role:'user',content:txt});
+    if(k==='buddy'&&isCall(txt)){ // sapaan / panggilan ke Bit Buddy dijawab langsung
+      setBusy(true);const d=thinking(k);
+      setTimeout(()=>{
+        if(g!==st.gen)return;
+        d.remove();st.history.push({role:'assistant',content:CALL_REPLY});add(k,'bot',CALL_REPLY);
+        setBusy(false);inp.focus();
+      },450);
+      return;
+    }
     setBusy(true);const dots=thinking(k);
-    let out='',failed=false;
+    let out='',failed=false,errMsg=ERR;
     try{
-      const res=await fetch(API,{method:'POST',headers:HEAD,
-        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:MODES[k].system,messages:st.history.slice(-19)})});
+      const key=getKey();
+      if(!key){errMsg=ERR_KEY;throw new Error('nokey')}
+      const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:getModel(),max_completion_tokens:1200,reasoning_effort:'low',messages:[{role:'system',content:MODES[k].system}].concat(st.history.slice(-19))})});
+      if(res.status===401||res.status===403)errMsg=ERR_AUTH;else if(res.status===429)errMsg=ERR_RATE;
       const data=await res.json().catch(()=>null);
-      out=data&&Array.isArray(data.content)?data.content.filter(c=>c.type==='text').map(c=>c.text).join('\n').trim():'';
+      out=data&&data.choices&&data.choices[0]&&data.choices[0].message&&typeof data.choices[0].message.content==='string'?data.choices[0].message.content.trim():'';
       if(!res.ok||!out)throw new Error('empty');
     }catch(e){failed=true}
     if(g!==st.gen)return; // chat di-reset saat menunggu
     dots.remove();
-    if(failed){st.history.pop();add(k,'bot',ERR,'err');inp.value=txt;grow()}
+    if(failed){st.history.pop();add(k,'bot',errMsg,'err');inp.value=txt;grow()}
     else{st.history.push({role:'assistant',content:out});add(k,'bot',out)}
     setBusy(false);inp.focus();
   }
@@ -2050,6 +2083,44 @@ html[data-mode=vulcan] .um-skills li{border-radius:6px;background:#0b0f14;border
   Object.keys(MODES).forEach(fresh);
   setMode(document.documentElement.dataset.mode||'buddy');
   document.addEventListener('sitemode',e=>setMode(e.detail));
+})();
+</script>
+<script>
+/* Pengaturan API Groq (chat Bit Buddy / Vulcan) */
+(()=>{
+  const $=id=>document.getElementById(id);
+  const KEY='khontrol.groqkey',MOD='khontrol.groqmodel';
+  const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return''}};
+  const set=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
+  const msg=t=>{$('gkMsg').textContent=t};
+  const mask=k=>k?k.slice(0,4)+'••••'+k.slice(-4):'';
+  function state(){const k=get(KEY);msg(k?'API key tersimpan ('+mask(k)+'). Model: '+($('gkModel').value)+'.':'Belum ada API key.')}
+  $('gkKey').value=get(KEY);
+  const m=get(MOD);if(m&&[...$('gkModel').options].some(o=>o.value===m))$('gkModel').value=m;
+  state();
+  $('gkSave').onclick=()=>{
+    const k=$('gkKey').value.trim();
+    if(!k){msg('Tempel API key dulu.');return}
+    if(!/^gsk_[A-Za-z0-9_-]{10,}$/.test(k)){msg('Format key tidak dikenali. API key Groq diawali "gsk_".');return}
+    set(KEY,k);set(MOD,$('gkModel').value);state();
+  };
+  $('gkModel').onchange=()=>{set(MOD,$('gkModel').value);if(get(KEY))state()};
+  $('gkShow').onclick=()=>{const p=$('gkKey').type==='password';$('gkKey').type=p?'text':'password';$('gkShow').textContent=p?'Sembunyikan':'Tampilkan'};
+  $('gkDel').onclick=()=>{set(KEY,'');$('gkKey').value='';state()};
+  $('gkTest').onclick=async()=>{
+    const k=$('gkKey').value.trim()||get(KEY);
+    if(!k){msg('Tempel API key dulu.');return}
+    const b=$('gkTest');b.disabled=true;msg('Menguji koneksi...');
+    try{
+      const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},
+        body:JSON.stringify({model:$('gkModel').value,max_completion_tokens:50,reasoning_effort:'low',messages:[{role:'user',content:'Balas satu kata: siap'}]})});
+      if(r.ok)msg('Berhasil. Groq merespons dengan model '+$('gkModel').value+'. Jangan lupa tekan Simpan key.');
+      else if(r.status===401||r.status===403)msg('API key ditolak (tidak valid).');
+      else if(r.status===429)msg('Key valid, tapi batas pemakaian tercapai. Coba lagi sebentar.');
+      else msg('Gagal ('+r.status+'). Periksa model dan key-mu.');
+    }catch(e){msg('Tidak bisa menghubungi Groq. Cek koneksi internet.')}
+    b.disabled=false;
+  };
 })();
 </script>
 <script>
