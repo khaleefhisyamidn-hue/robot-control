@@ -2048,14 +2048,17 @@ html:not([data-mode=vulcan])[data-theme=dark] .themebtn{background:#13243a;color
     if(!r.width||!r.height)return;
     scareBusy=true;
     let wrap=null;
+    const cs=getComputedStyle(svg),pl=parseFloat(cs.paddingLeft)||0,pt=parseFloat(cs.paddingTop)||0,pr=parseFloat(cs.paddingRight)||0,pb=parseFloat(cs.paddingBottom)||0;
+    const mw=r.width-pl-pr,mh=r.height-pt-pb,ml=r.left+pl,mt=r.top+pt; // ukuran maskot tanpa lencana biru
+    const FLAT='padding:0;background:none;box-shadow:none;border-radius:0;box-sizing:content-box;';
     try{
       if(reducedMotion){svg.style.visibility='hidden';await wait(1200);return}
-      const carW=Math.max(r.width*2.8,120),carH=carW*.4,bodyTop=carH*18/64,ov=carH*.14;
+      const carW=Math.max(mw*1.7,70),carH=carW*.4,bodyTop=carH*18/64,ov=carH*.14;
       wrap=document.createElement('div');
-      wrap.style.cssText='position:fixed;left:'+(r.left+r.width/2-carW/2)+'px;top:'+(r.top+r.height-bodyTop-ov)+'px;width:'+carW+'px;height:'+carH+'px;z-index:8001;pointer-events:none';
+      wrap.style.cssText='position:fixed;left:'+(ml+mw/2-carW/2)+'px;top:'+(mt+mh-bodyTop-ov)+'px;width:'+carW+'px;height:'+carH+'px;z-index:8001;pointer-events:none';
       const cl=svg.cloneNode(true);
       cl.querySelectorAll('.pu').forEach(g=>g.setAttribute('transform','translate(20 0)')); // menatap ke depan
-      cl.style.cssText='position:absolute;left:'+((carW-r.width)/2)+'px;top:'+(bodyTop+ov-r.height)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;visibility:visible';
+      cl.style.cssText=FLAT+'position:absolute;left:'+((carW-mw)/2)+'px;top:'+(bodyTop+ov-mh)+'px;width:'+mw+'px;height:'+mh+'px;margin:0;visibility:visible';
       cl.style.opacity='0'; // maskot duduk di mobil baru setelah melompat
       wrap.appendChild(cl);
       const car=document.createElement('div');
@@ -2063,13 +2066,13 @@ html:not([data-mode=vulcan])[data-theme=dark] .themebtn{background:#13243a;color
       car.innerHTML='<svg viewBox="0 0 160 64" width="100%" height="100%" aria-hidden="true"><path d="M6 30Q6 18 20 18H128Q146 20 152 32Q158 36 156 46Q156 52 148 52H12Q4 52 4 44Z" fill="#ef4444"/><path d="M100 18L118 6H128L132 18Z" fill="#7dd3fc" opacity=".9"/><rect x="10" y="30" width="136" height="4" fill="#b91c1c"/><rect x="146" y="34" width="9" height="7" rx="3" fill="#fde047"/><g class="pk-wheel" style="transform-origin:34px 52px"><circle cx="34" cy="52" r="11" fill="#0f172a"/><circle cx="34" cy="52" r="4" fill="#94a3b8"/><path d="M34 44V60M26 52H42" stroke="#94a3b8" stroke-width="2"/></g><g class="pk-wheel" style="transform-origin:122px 52px"><circle cx="122" cy="52" r="11" fill="#0f172a"/><circle cx="122" cy="52" r="4" fill="#94a3b8"/><path d="M122 44V60M114 52H130" stroke="#94a3b8" stroke-width="2"/></g></svg>';
       wrap.appendChild(car);
       document.body.appendChild(wrap);
-      const off=carW*.55+r.width/2; // mobil berhenti di kanan maskot
+      const off=carW*.55+mw/2; // mobil berhenti di kanan maskot
       // 1) mobil datang duluan dari kiri
-      await wrap.animate([{transform:'translateX('+(-(r.left+carW+60))+'px)'},{transform:'translateX('+off+'px)'}],{duration:800,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).finished;
+      await wrap.animate([{transform:'translateX('+(-(ml+carW+60))+'px)'},{transform:'translateX('+off+'px)'}],{duration:800,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).finished;
       // 2) maskot melompat ke mobil
       const jm=svg.cloneNode(true);
       jm.querySelectorAll('.pu').forEach(g=>g.setAttribute('transform','translate(20 0)'));
-      jm.style.cssText='position:fixed;left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:8002;pointer-events:none;visibility:visible';
+      jm.style.cssText=FLAT+'position:fixed;left:'+ml+'px;top:'+mt+'px;width:'+mw+'px;height:'+mh+'px;margin:0;z-index:8002;pointer-events:none;visibility:visible';
       document.body.appendChild(jm);svg.style.visibility='hidden';
       await jm.animate([
         {transform:'translate(0,0) scale(1,1)'},
