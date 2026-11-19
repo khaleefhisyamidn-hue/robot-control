@@ -1082,14 +1082,14 @@ html:not([data-mode=vulcan])[data-theme=dark] .themebtn{background:#13243a;color
 
 /* ===== VULCAN PREMIUM — monokrom + satu aksen (indigo/cyan) ===== */
 html[data-mode=vulcan]{
-  --coral:#6366f1;--acc:#6366f1;--acc2:#22d3ee;--acc-soft:rgba(99,102,241,.14);--acc-line:rgba(129,140,248,.5);
+  --coral:var(--acc);--acc:var(--acc);--acc-rgb:99,102,241;--acc2:#22d3ee;--acc2-rgb:34,211,238;--acc3-rgb:139,92,246;--acc-d:#4f46e5;--on-acc:#fff;--acc-soft:rgba(var(--acc-rgb),.14);--acc-line:rgba(var(--acc-rgb),.55);
   --bg:#08080a;--card:#101013;--card2:#141418;--dark:#1a1a1f;--ink:#ececf0;--ink2:#b4b4be;--mut:#80808c;
   --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);--r:12px;--r2:16px;
   --ease:cubic-bezier(.2,.7,.2,1);--f:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif
 }
 html[data-mode=vulcan] body{background:var(--bg);color:var(--ink);font-family:var(--f);font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(900px 420px at 72% -8%,rgba(99,102,241,.10),transparent 70%),radial-gradient(600px 300px at 8% 0,rgba(34,211,238,.05),transparent 70%);background-attachment:fixed}
-html[data-mode=vulcan] ::selection{background:rgba(99,102,241,.4)}
+  background-image:radial-gradient(900px 420px at 72% -8%,rgba(var(--acc-rgb),.10),transparent 70%),radial-gradient(600px 300px at 8% 0,rgba(var(--acc2-rgb),.05),transparent 70%);background-attachment:fixed}
+html[data-mode=vulcan] ::selection{background:rgba(var(--acc-rgb),.4)}
 html[data-mode=vulcan] button:focus-visible,html[data-mode=vulcan] input:focus-visible,html[data-mode=vulcan] select:focus-visible,html[data-mode=vulcan] textarea:focus-visible,html[data-mode=vulcan] summary:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
 html[data-mode=vulcan] button,html[data-mode=vulcan] .nav,html[data-mode=vulcan] .tab,html[data-mode=vulcan] .act{transition:background-color .18s var(--ease),border-color .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),box-shadow .18s var(--ease),opacity .18s}
 /* sidebar */
@@ -1098,11 +1098,9 @@ html[data-mode=vulcan] .logo{border:0;background:none;padding:6px 10px;font-size
 html[data-mode=vulcan] .vbrand{height:18px;opacity:.95}
 html[data-mode=vulcan] nav{gap:2px}
 html[data-mode=vulcan] .nav{position:relative;border:0;border-radius:9px;padding:9px 12px 9px 14px;font-size:.84rem;font-weight:500;letter-spacing:.04em;color:var(--mut)}
-html[data-mode=vulcan] .nav::before{content:"";position:absolute;left:0;top:50%;width:2px;height:0;border-radius:2px;background:linear-gradient(var(--acc2),var(--acc));transform:translateY(-50%);transition:height .22s var(--ease)}
 html[data-mode=vulcan] .nav:hover{background:rgba(255,255,255,.05);color:#fff}
 html[data-mode=vulcan] .nav:active{transform:scale(.98)}
 html[data-mode=vulcan] .nav.on,html[data-mode=vulcan] .nav.on:hover{background:rgba(255,255,255,.07);color:#fff;font-weight:600;border:0}
-html[data-mode=vulcan] .nav.on::before{height:16px}
 html[data-mode=vulcan] .side-bt{gap:10px}
 html[data-mode=vulcan] .st{color:var(--mut);font-size:.78rem;line-height:1.4}
 html[data-mode=vulcan] .dot{background:#52525b;box-shadow:none;width:8px;height:8px}
@@ -1150,7 +1148,7 @@ html[data-mode=vulcan] .select select,html[data-mode=vulcan] .form input,html[da
 html[data-mode=vulcan] .select select{font-size:.95rem;font-weight:500;padding:12px 42px 12px 14px;max-width:none}
 html[data-mode=vulcan] .select{max-width:none}
 html[data-mode=vulcan] .select select:hover,html[data-mode=vulcan] .form input:hover,html[data-mode=vulcan] textarea:hover{border-color:rgba(255,255,255,.24);box-shadow:none;transform:none}
-html[data-mode=vulcan] .select select:focus,html[data-mode=vulcan] .form input:focus,html[data-mode=vulcan] textarea:focus,html[data-mode=vulcan] .tmrow input:focus,html[data-mode=vulcan] #tmUrl:focus{outline:0;border-color:var(--acc-line);box-shadow:0 0 0 3px rgba(99,102,241,.22)}
+html[data-mode=vulcan] .select select:focus,html[data-mode=vulcan] .form input:focus,html[data-mode=vulcan] textarea:focus,html[data-mode=vulcan] .tmrow input:focus,html[data-mode=vulcan] #tmUrl:focus{outline:0;border-color:var(--acc-line);box-shadow:0 0 0 3px rgba(var(--acc-rgb),.22)}
 html[data-mode=vulcan] .form label,html[data-mode=vulcan] .lb{font-size:.76rem;font-weight:500;letter-spacing:.04em;color:var(--ink2)}
 html[data-mode=vulcan] input::placeholder,html[data-mode=vulcan] textarea::placeholder{color:#5f5f6b}
 html[data-mode=vulcan] input[type=checkbox]{accent-color:var(--acc)}
@@ -1160,23 +1158,23 @@ html[data-mode=vulcan] .tab:hover{background:rgba(255,255,255,.05);color:#fff;tr
 html[data-mode=vulcan] .tab.on{background:#ececf0;border-color:#ececf0;color:#0b0b0e}
 html[data-mode=vulcan] .act{height:46px;border-radius:10px;border:1px solid var(--line2);background:var(--card2);color:var(--ink);font-weight:500;letter-spacing:.04em;font-size:.9rem}
 html[data-mode=vulcan] .act:hover{background:#1c1c22;border-color:rgba(255,255,255,.22)}
-html[data-mode=vulcan] .act:active{background:var(--acc);border-color:var(--acc);color:#fff;transform:scale(.97)}
+html[data-mode=vulcan] .act:active{background:var(--acc);border-color:var(--acc);color:var(--on-acc);transform:scale(.97)}
 html[data-mode=vulcan] .val{background:#09090b;border:1px solid var(--line);border-radius:10px;color:#fff;font:500 1.9rem var(--mono)}
 html[data-mode=vulcan] .tg{background:#1c1c22;border:1px solid var(--line2);border-radius:999px}
 html[data-mode=vulcan] .tg .k{background:#d4d4dc;border-radius:50%}
 html[data-mode=vulcan] .tg[aria-checked=true]{background:var(--acc);border-color:var(--acc)}
-html[data-mode=vulcan] .tg[aria-checked=true] .k{background:#fff}
+html[data-mode=vulcan] .tg[aria-checked=true] .k{background:var(--on-acc)}
 html[data-mode=vulcan] input[type=range]{accent-color:var(--acc)}
 html[data-mode=vulcan] .dpad button,html[data-mode=vulcan] .grip button{background:var(--card2);border:1px solid var(--line2);border-radius:14px;color:var(--ink)}
 html[data-mode=vulcan] .dpad button:hover,html[data-mode=vulcan] .grip button:hover{background:#1c1c22;border-color:rgba(255,255,255,.24)}
-html[data-mode=vulcan] .dpad button.down,html[data-mode=vulcan] .grip button.down{background:var(--acc);border-color:var(--acc);color:#fff;transform:scale(.96);box-shadow:0 0 24px -4px rgba(99,102,241,.7)}
+html[data-mode=vulcan] .dpad button.down,html[data-mode=vulcan] .grip button.down{background:var(--acc);border-color:var(--acc);color:var(--on-acc);transform:scale(.96);box-shadow:0 0 24px -4px rgba(var(--acc-rgb),.7)}
 html[data-mode=vulcan] .grip button.on{background:var(--acc-soft);border-color:var(--acc-line);color:#fff}
 html[data-mode=vulcan] .dpad .dst{background:rgba(229,72,77,.1);border:1px solid rgba(229,72,77,.4);color:#ff8589;border-radius:14px}
 html[data-mode=vulcan] .dpad .dst.on{background:#e5484d;color:#fff}
 html[data-mode=vulcan] .gst{color:var(--mut)}
 html[data-mode=vulcan] .pvg b{color:var(--acc2)}
 html[data-mode=vulcan] .chips li,html[data-mode=vulcan] .cr-info .chips li{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;font-weight:500}
-html[data-mode=vulcan] .cr-info .chips li::before{background:var(--acc);border-radius:50%}
+html[data-mode=vulcan] .cr-info .chips li::before{background:var(--acc);color:var(--on-acc);border-radius:50%}
 /* log / cam / pred */
 html[data-mode=vulcan] .logbox,html[data-mode=vulcan] .cam,html[data-mode=vulcan] .pred{background:#09090b;border:1px solid var(--line);border-radius:var(--r)}
 html[data-mode=vulcan] #log{font:12px/1.65 var(--mono);color:var(--ink2)}
@@ -1207,7 +1205,7 @@ html[data-mode=vulcan] #v-buddy .bb-key{background:rgba(250,204,21,.06);border-b
 html[data-mode=vulcan] #v-buddy .bb-keygo{background:#ececf0;color:#0b0b0e;border-radius:7px;font-weight:600}
 html[data-mode=vulcan] #v-buddy .bb-log{background:transparent;scroll-behavior:smooth}
 html[data-mode=vulcan] #v-buddy .bb-m{border-radius:14px;line-height:1.65;font-size:.94rem;animation:vxIn .28s var(--ease) both}
-html[data-mode=vulcan] #v-buddy .bb-m.me{background:linear-gradient(135deg,#5b5ef0,#4f46e5);color:#fff;border:0;box-shadow:0 8px 24px -12px rgba(99,102,241,.7)}
+html[data-mode=vulcan] #v-buddy .bb-m.me{background:linear-gradient(135deg,var(--acc),var(--acc-d));color:var(--on-acc);border:0;box-shadow:0 8px 24px -12px rgba(var(--acc-rgb),.7)}
 html[data-mode=vulcan] #v-buddy .bb-m.bot:not(.err){background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--ink)}
 html[data-mode=vulcan] #v-buddy .bb-m.err{background:rgba(229,72,77,.08);border:1px solid rgba(229,72,77,.35)}
 html[data-mode=vulcan] .bb-brand{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0));border:1px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -1219,16 +1217,16 @@ html[data-mode=vulcan] #v-buddy .bb-code .bb-codeh button{background:rgba(255,25
 html[data-mode=vulcan] #v-buddy .bb-code .bb-codeh button:hover{background:rgba(255,255,255,.12);color:#fff}
 html[data-mode=vulcan] #v-buddy .bb-sug::before{color:var(--mut);letter-spacing:.16em;font-size:.68rem}
 html[data-mode=vulcan] #v-buddy .bb-chip{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-weight:500;font-size:.82rem}
-html[data-mode=vulcan] #v-buddy .bb-chip b{background:rgba(99,102,241,.14);color:#a5b4fc;border-radius:8px}
+html[data-mode=vulcan] #v-buddy .bb-chip b{background:rgba(var(--acc-rgb),.14);color:var(--acc2);border-radius:8px}
 html[data-mode=vulcan] #v-buddy .bb-chip:hover:not(:disabled){background:rgba(255,255,255,.06);border-color:var(--acc-line);transform:translateY(-1px)}
 html[data-mode=vulcan] #v-buddy .bb-chip:active:not(:disabled){transform:scale(.98)}
 html[data-mode=vulcan] #v-buddy .bb-comp{background:transparent;border-top:1px solid var(--line)}
 html[data-mode=vulcan] #v-buddy .bb-in{background:#09090b;border:1px solid var(--line2);border-radius:14px;transition:border-color .18s,box-shadow .18s}
-html[data-mode=vulcan] #v-buddy .bb-in:focus-within{border-color:var(--acc-line);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+html[data-mode=vulcan] #v-buddy .bb-in:focus-within{border-color:var(--acc-line);box-shadow:0 0 0 3px rgba(var(--acc-rgb),.2)}
 html[data-mode=vulcan] #v-buddy .bb-in textarea{border:0;box-shadow:none;background:transparent;border-radius:0}
 html[data-mode=vulcan] #v-buddy .bb-in textarea:focus{box-shadow:none}
-html[data-mode=vulcan] #v-buddy .bb-in .bb-send{background:var(--acc);color:#fff;border-radius:10px}
-html[data-mode=vulcan] #v-buddy .bb-in .bb-send:hover:not(:disabled){background:#7578f5;box-shadow:0 0 18px -2px rgba(99,102,241,.8)}
+html[data-mode=vulcan] #v-buddy .bb-in .bb-send{background:var(--acc);color:var(--on-acc);border-radius:10px}
+html[data-mode=vulcan] #v-buddy .bb-in .bb-send:hover:not(:disabled){filter:brightness(1.15);box-shadow:0 0 18px -2px rgba(var(--acc-rgb),.8)}
 html[data-mode=vulcan] #v-buddy .bb-in .bb-send:disabled{background:rgba(255,255,255,.06);color:var(--mut)}
 html[data-mode=vulcan] #v-buddy .bb-foot{color:#62626e}
 html[data-mode=vulcan] #v-buddy .bb-dots i{background:var(--acc2)}
@@ -1245,7 +1243,7 @@ html[data-mode=vulcan] *{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.
   html[data-mode=vulcan] nav::-webkit-scrollbar{display:none}
   html[data-mode=vulcan] .nav{flex:none;white-space:nowrap;scroll-snap-align:center;padding:8px 12px;font-size:.78rem;border:1px solid transparent;border-radius:999px}
   html[data-mode=vulcan] .nav::before{display:none}
-  html[data-mode=vulcan] .nav.on,html[data-mode=vulcan] .nav.on:hover{background:#ececf0;color:#0b0b0e;border-color:#ececf0}
+  html[data-mode=vulcan] .nav.on,html[data-mode=vulcan] .nav.on:hover{background:transparent;color:#fff;border-color:transparent}
   html[data-mode=vulcan] .side-bt{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px;margin:0;padding:0;overflow:visible}
   html[data-mode=vulcan] .side-bt .st{flex:1 1 140px;min-width:0}
   html[data-mode=vulcan] .side-bt .btn{flex:none}
@@ -1258,15 +1256,140 @@ html[data-mode=vulcan] *{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.
 }
 @media (prefers-reduced-motion:reduce){html[data-mode=vulcan] *,html[data-mode=vulcan] *::before{animation:none!important;transition:none!important}}
 /* cahaya bergerak */
-html[data-mode=vulcan]::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(38% 34% at 24% 28%,rgba(99,102,241,.26),transparent 70%),radial-gradient(34% 30% at 76% 22%,rgba(34,211,238,.16),transparent 70%),radial-gradient(40% 34% at 62% 82%,rgba(139,92,246,.16),transparent 70%);animation:vxGlow 16s ease-in-out infinite alternate;will-change:transform}
+html[data-mode=vulcan]::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(38% 34% at 24% 28%,rgba(var(--acc-rgb),.26),transparent 70%),radial-gradient(34% 30% at 76% 22%,rgba(var(--acc2-rgb),.16),transparent 70%),radial-gradient(40% 34% at 62% 82%,rgba(var(--acc3-rgb),.16),transparent 70%);animation:vxGlow 16s ease-in-out infinite alternate;will-change:transform}
 @keyframes vxGlow{0%{transform:translate3d(-5%,-3%,0) scale(1)}50%{transform:translate3d(6%,4%,0) scale(1.1)}100%{transform:translate3d(-3%,6%,0) rotate(8deg) scale(1.03)}}
 html[data-mode=vulcan] aside,html[data-mode=vulcan] main{position:relative;z-index:1}
 html[data-mode=vulcan] .panel{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 160px),rgba(11,11,14,.78)}
 html[data-mode=vulcan] .panel::before{background:linear-gradient(90deg,transparent 0,var(--acc) 25%,var(--acc2) 50%,transparent 75%) 0 0/50% 100% repeat-x;opacity:.8;animation:vxShine 5s linear infinite}
 @keyframes vxShine{to{background-position:100% 0}}
-html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
 @media (prefers-reduced-motion:reduce){html[data-mode=vulcan]::before,html[data-mode=vulcan] .panel::before{animation:none!important}}
 /* ===== /VULCAN PREMIUM ===== */
+/* ===== VULCAN LOADING v2 + FEEDBACK GLITCH ===== */
+#vLoad .vl-half{background:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),linear-gradient(rgba(var(--acc2-rgb),.055) 1px,transparent 1px) 0 0/56px 56px,linear-gradient(90deg,rgba(var(--acc2-rgb),.055) 1px,transparent 1px) 0 0/56px 56px,#06080c}
+#vLoad .vl-half.top{background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),linear-gradient(rgba(var(--acc2-rgb),.055) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--acc2-rgb),.055) 1px,transparent 1px),radial-gradient(60% 100% at 50% 100%,rgba(var(--acc-rgb),.30),transparent 72%);background-size:auto,56px 56px,56px 56px,auto;background-position:0 0,0 100%,0 0,0 0}
+#vLoad .vl-half.bot{background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),linear-gradient(rgba(var(--acc2-rgb),.055) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--acc2-rgb),.055) 1px,transparent 1px),radial-gradient(60% 100% at 50% 0,rgba(var(--acc-rgb),.30),transparent 72%);background-size:auto,56px 56px,56px 56px,auto;background-position:0 0,0 0,0 0,0 0}
+#vLoad .vl-half::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 180px 40px #000}
+#vLoad .vl-cv{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#vLoad .vl-sweep{position:fixed;left:0;right:0;top:-160px;height:160px;z-index:2;pointer-events:none;background:linear-gradient(transparent,rgba(var(--acc2-rgb),.10) 70%,rgba(var(--acc2-rgb),.28) 99%,transparent);animation:vlSweep 2.6s linear infinite}
+@keyframes vlSweep{to{transform:translateY(calc(100vh + 160px))}}
+#vLoad .vl-cn{position:fixed;width:34px;height:34px;z-index:3;border:0 solid rgba(var(--acc2-rgb),.55);pointer-events:none;animation:vlCn .7s steps(1) both}
+#vLoad .vl-cn.tl{left:22px;top:22px;border-width:2px 0 0 2px}#vLoad .vl-cn.tr{right:22px;top:22px;border-width:2px 2px 0 0}
+#vLoad .vl-cn.bl{left:22px;bottom:22px;border-width:0 0 2px 2px}#vLoad .vl-cn.br{right:22px;bottom:22px;border-width:0 2px 2px 0}
+@keyframes vlCn{0%{opacity:0}20%{opacity:1}30%{opacity:.2}45%,100%{opacity:1}}
+#vLoad .vl-tag{position:fixed;top:30px;z-index:3;font:600 .7rem ui-monospace,Menlo,Consolas,monospace;letter-spacing:.2em;color:#7f98ad;pointer-events:none}
+#vLoad .vl-tag.l{left:70px}#vLoad .vl-tag.r{right:70px;text-align:right;font-variant-numeric:tabular-nums}
+#vLoad .vl-tag b{color:var(--acc2);font-weight:600}
+#vLoad .vl-center{gap:18px}
+#vLoad .vl-hud{position:relative;width:min(64vmin,460px);aspect-ratio:1;display:grid;place-items:center;animation:vlHud .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vlHud{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+#vLoad .vl-hud::before{content:"";position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle,rgba(var(--acc-rgb),.22),rgba(var(--acc2-rgb),.06) 55%,transparent 72%);animation:vlBreath 2.4s ease-in-out infinite}
+@keyframes vlBreath{50%{transform:scale(1.12);opacity:.7}}
+#vLoad .vl-rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#vLoad .vl-rings *{fill:none;vector-effect:non-scaling-stroke}
+#vLoad .vl-rings .r-track{stroke:rgba(255,255,255,.08);stroke-width:2}
+#vLoad .vl-rings .r-prog{stroke:var(--acc2);stroke-width:3;stroke-linecap:butt;filter:drop-shadow(0 0 6px var(--acc2));transition:stroke-dashoffset .12s linear}
+#vLoad .vl-rings .r-t1{stroke:rgba(var(--acc2-rgb),.55);stroke-width:5;stroke-dasharray:1.4 5.6;transform-origin:0 0;animation:vlSpin 26s linear infinite}
+#vLoad .vl-rings .r-t2{stroke:rgba(var(--acc-rgb),.85);stroke-width:2;stroke-dasharray:70 40 18 60;transform-origin:0 0;animation:vlSpin 9s linear infinite reverse}
+#vLoad .vl-rings .r-t3{stroke:rgba(255,255,255,.18);stroke-width:1;stroke-dasharray:2 6;transform-origin:0 0;animation:vlSpin 40s linear infinite reverse}
+#vLoad .vl-rings .r-x{stroke:rgba(var(--acc2-rgb),.7);stroke-width:2}
+@keyframes vlSpin{to{transform:rotate(360deg)}}
+#vLoad .vl-core{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px}
+#vLoad .vl-word{font-size:clamp(1.6rem,6.2vmin,3.1rem);font-weight:800;letter-spacing:.22em;text-indent:.22em;white-space:nowrap;text-shadow:0 0 24px rgba(var(--acc2-rgb),.45)}
+#vLoad .vl-word::before,#vLoad .vl-word::after{text-indent:.22em}
+#vLoad .vl-num{font:600 clamp(.9rem,2.6vmin,1.25rem) ui-monospace,Menlo,Consolas,monospace;letter-spacing:.14em;color:var(--acc2);font-variant-numeric:tabular-nums;text-shadow:0 0 12px rgba(var(--acc2-rgb),.6)}
+#vLoad .vl-num small{font-size:.7em;margin-left:2px;opacity:.7}
+#vLoad .vl-bar{width:min(360px,70vw);height:2px;background:rgba(255,255,255,.1)}
+#vLoad .vl-bar i{background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 0 14px var(--acc2)}
+#vLoad .vl-pct{font-size:.72rem;color:#8aa3b8}
+#vLoad .vl-log{list-style:none;margin:2px 0 0;padding:0;width:min(360px,76vw);height:76px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;font:500 .7rem/1.55 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;color:#6f8799;-webkit-mask-image:linear-gradient(transparent,#000 40%);mask-image:linear-gradient(transparent,#000 40%)}
+#vLoad .vl-log li{white-space:nowrap;animation:vlLine .22s steps(3) both}
+#vLoad .vl-log li b{color:var(--acc2);font-weight:600}
+#vLoad .vl-log li i{font-style:normal;float:right;color:#34d399}
+@keyframes vlLine{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+#vLoad.logo-in .vl-cv,#vLoad.logo-in .vl-sweep,#vLoad.logo-in .vl-tag{display:none}
+/* momen logo muncul */
+#vLoad .vl-flash,#vLoad .vl-wave,#vLoad .vl-grant{display:none;position:fixed;pointer-events:none}
+#vLoad.logo-in .vl-flash{display:block;inset:0;z-index:6;background:#fff;animation:vlFlash .5s ease-out forwards}
+@keyframes vlFlash{0%{opacity:.85}100%{opacity:0}}
+#vLoad.logo-in .vl-wave{display:block;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;z-index:4;border:2px solid var(--acc2);border-radius:50%;box-shadow:0 0 30px var(--acc2),inset 0 0 30px var(--acc2);animation:vlWave 1s cubic-bezier(.1,.7,.2,1) forwards}
+@keyframes vlWave{from{opacity:1;transform:scale(.2)}to{opacity:0;transform:scale(26)}}
+#vLoad.logo-in .vl-grant{display:block;left:0;right:0;bottom:15vh;z-index:4;text-align:center;font:600 .8rem ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5em;text-indent:.5em;color:var(--acc2);text-shadow:0 0 14px var(--acc2);animation:vlGrant .9s .45s steps(1) both}
+@keyframes vlGrant{0%{opacity:0}10%{opacity:1}20%{opacity:0}30%{opacity:1}45%{opacity:.4}60%,100%{opacity:1}}
+#vLoad.logo-in .vl-half{animation:vlShake .45s steps(1)}
+@keyframes vlShake{0%{transform:translate(0,0)}15%{transform:translate(-7px,3px)}30%{transform:translate(6px,-4px)}45%{transform:translate(-4px,-2px)}60%{transform:translate(3px,3px)}75%{transform:translate(-2px,0)}100%{transform:none}}
+#vLoad.logo-in .vl-logo img{animation:vlLogoIn .8s steps(1,end) forwards,vlPulse 1.3s .8s ease-in-out infinite}
+@keyframes vlPulse{0%,100%{filter:invert(1) drop-shadow(0 0 14px rgba(var(--acc2-rgb),.4))}50%{filter:invert(1) drop-shadow(0 0 34px rgba(var(--acc-rgb),.9))}}
+@media (max-width:760px){#vLoad .vl-tag{display:none}#vLoad .vl-cn{width:22px;height:22px;left:12px;right:12px}#vLoad .vl-cn.tl,#vLoad .vl-cn.bl{left:12px}#vLoad .vl-cn.tr,#vLoad .vl-cn.br{right:12px}#vLoad .vl-cn.tl,#vLoad .vl-cn.tr{top:12px}#vLoad .vl-cn.bl,#vLoad .vl-cn.br{bottom:12px}}
+/* feedback: logo Vulcan glitch */
+.vgl{display:none;position:relative;height:64px;line-height:0}
+html[data-mode=vulcan] .vgl{display:inline-block}
+.vgl img{display:block;height:64px;width:auto;margin:0}
+.vgl .vgb{filter:invert(1);animation:vgB 1.2s steps(1) infinite -1s}
+.vgl .vg{position:absolute;left:0;top:0;mix-blend-mode:screen;opacity:0;pointer-events:none}
+.vgl .g1{filter:invert(1) sepia(1) saturate(7) hue-rotate(150deg);animation:vgG1 1.2s steps(1) infinite -1s}
+.vgl .g2{filter:invert(1) sepia(1) saturate(7) hue-rotate(-30deg);animation:vgG2 1.2s steps(1) infinite -1s}
+@keyframes vgB{0%,82%,100%{transform:none}84%{transform:translate(4px,-1px) skewX(12deg)}86%{transform:translate(-6px,1px) skewX(-9deg)}88%{transform:translate(3px,0) scaleY(1.06)}90%{transform:translate(-2px,2px) skewX(5deg)}92%{transform:none;opacity:.55}94%{opacity:1}96%{transform:translate(1px,0)}}
+@keyframes vgG1{0%,80%,98%,100%{opacity:.55;clip-path:inset(0);transform:translate(-2px,0)}84%{opacity:1;clip-path:inset(8% 0 72% 0);transform:translate(-7px,0)}86%{opacity:1;clip-path:inset(52% 0 24% 0);transform:translate(6px,0)}88%{opacity:1;clip-path:inset(28% 0 50% 0);transform:translate(-5px,1px)}90%{opacity:1;clip-path:inset(70% 0 6% 0);transform:translate(8px,0)}92%{opacity:1;clip-path:inset(0 0 88% 0);transform:translate(-3px,0)}95%{opacity:.6;clip-path:inset(40% 0 40% 0);transform:translate(2px,0)}}
+@keyframes vgG2{0%,80%,98%,100%{opacity:.55;clip-path:inset(0);transform:translate(2px,0)}85%{opacity:1;clip-path:inset(58% 0 20% 0);transform:translate(7px,0)}87%{opacity:1;clip-path:inset(10% 0 74% 0);transform:translate(-6px,1px)}89%{opacity:1;clip-path:inset(80% 0 4% 0);transform:translate(4px,0)}91%{opacity:1;clip-path:inset(36% 0 46% 0);transform:translate(-8px,0)}93%{opacity:1;clip-path:inset(0 0 94% 0);transform:translate(5px,0)}96%{opacity:.5;clip-path:inset(62% 0 18% 0);transform:translate(-2px,0)}}
+html[data-mode=vulcan] .fb-jump{animation:none}
+html[data-mode=vulcan] .fb-shadow{display:none}
+html[data-mode=vulcan] .fb-stage{background:radial-gradient(70% 110% at 50% 110%,rgba(var(--acc-rgb),.38),transparent 70%),linear-gradient(rgba(var(--acc2-rgb),.06) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,rgba(var(--acc2-rgb),.06) 1px,transparent 1px) 0 0/28px 28px,#08090c;border:1px solid var(--line);align-items:center;padding-bottom:0}
+html[data-mode=vulcan] .fb-stage::after{content:"";position:absolute;left:0;right:0;top:-40px;height:40px;background:linear-gradient(transparent,rgba(var(--acc2-rgb),.22));border-bottom:1px solid rgba(var(--acc2-rgb),.5);animation:vlSweepS 2.2s linear infinite;pointer-events:none}
+@keyframes vlSweepS{to{transform:translateY(200px)}}
+@media (prefers-reduced-motion:reduce){#vLoad *,.vgl *{animation:none!important}.vgl .vg{display:none}}
+
+/* pemilih warna cahaya */
+.vc-card{display:none}
+html[data-mode=vulcan] .vc-card{display:block;margin-top:34px}
+.vc-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin:14px 0}
+.vc-sw button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font:500 .82rem var(--f);cursor:pointer;text-align:left;background:var(--card);color:var(--ink2);border:1px solid var(--line)}
+.vc-sw button i{width:20px;height:20px;border-radius:50%;flex:none;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 0 12px -2px var(--c1)}
+.vc-sw button:hover{border-color:var(--line2);color:#fff;background:var(--card2)}
+.vc-sw button[aria-pressed=true]{border-color:var(--acc-line);color:#fff;box-shadow:0 0 0 3px rgba(var(--acc-rgb),.18)}
+.vc-custom{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.vc-custom label{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--ink2)}
+.vc-custom input[type=color]{width:44px;height:32px;padding:2px;border-radius:8px;border:1px solid var(--line2);background:#09090b;cursor:pointer}
+/* ===== /VULCAN LOADING v2 ===== */
+/* ===== VULCAN NAV v2 ===== */
+.nav-ind{display:none}
+html[data-mode=vulcan] nav{position:relative;gap:3px}
+html[data-mode=vulcan] .nav{position:relative;z-index:1;overflow:hidden;background:transparent;padding-right:30px;animation:navIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*45ms + 80ms);transition:padding-left .25s var(--ease),color .2s,transform .12s var(--ease)}
+@keyframes navIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+html[data-mode=vulcan] .nav:hover,html[data-mode=vulcan] .nav.on,html[data-mode=vulcan] .nav.on:hover{background:transparent}
+html[data-mode=vulcan] .nav:hover:not(.on){padding-left:19px}
+html[data-mode=vulcan] .nav::before{content:"";position:absolute;inset:0;width:auto;height:auto;transform:none;border-radius:inherit;z-index:-1;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(130px circle at var(--mx,50%) var(--my,50%),rgba(var(--acc2-rgb),.2),rgba(var(--acc-rgb),.07) 55%,transparent 75%)}
+html[data-mode=vulcan] .nav:hover::before{opacity:1}
+html[data-mode=vulcan] .nav::after{content:"\203A";position:absolute;right:12px;top:50%;font-size:1.15rem;line-height:1;opacity:0;transform:translate(-8px,-52%);transition:opacity .2s,transform .25s var(--ease);color:var(--acc2)}
+html[data-mode=vulcan] .nav:hover::after,html[data-mode=vulcan] .nav.on::after{opacity:.85;transform:translate(0,-52%)}
+html[data-mode=vulcan] .nav .ni{display:inline-block;width:1.35em;text-align:center;margin-right:.2em;transition:transform .3s var(--ease),color .2s,text-shadow .2s}
+html[data-mode=vulcan] .nav:hover .ni{transform:scale(1.25) rotate(-8deg);color:var(--acc2)}
+html[data-mode=vulcan] .nav.on .ni{color:var(--acc2);text-shadow:0 0 12px rgba(var(--acc2-rgb),.9)}
+html[data-mode=vulcan] .nav.on{color:#fff}
+html[data-mode=vulcan] .nav-ind{display:block;position:absolute;left:0;top:0;width:var(--w,0);height:var(--h,0);transform:translate(var(--x,0),var(--y,0));z-index:0;pointer-events:none;border-radius:10px;overflow:hidden;
+  background:linear-gradient(90deg,rgba(var(--acc-rgb),.26),rgba(var(--acc-rgb),.05) 75%),rgba(255,255,255,.03);border:1px solid rgba(var(--acc-rgb),.4);
+  box-shadow:0 0 26px -6px rgba(var(--acc-rgb),.7),inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .5s cubic-bezier(.34,1.35,.4,1),width .3s var(--ease),height .3s var(--ease);animation:navBreath 3.2s ease-in-out infinite}
+html[data-mode=vulcan] .nav-ind.snap{transition:none}
+@keyframes navBreath{50%{box-shadow:0 0 34px -4px rgba(var(--acc-rgb),.95),inset 0 1px 0 rgba(255,255,255,.07)}}
+html[data-mode=vulcan] .nav-ind::before{content:"";position:absolute;left:0;top:50%;width:3px;height:58%;transform:translateY(-50%);border-radius:0 3px 3px 0;background:linear-gradient(var(--acc2),var(--acc));box-shadow:0 0 12px var(--acc2)}
+html[data-mode=vulcan] .nav-ind::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-130%)}
+html[data-mode=vulcan] .nav-ind.go::after{animation:navShine .7s ease-out}
+@keyframes navShine{to{transform:translateX(130%)}}
+html[data-mode=vulcan] .nav-rip{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:rgba(var(--acc2-rgb),.55);pointer-events:none;animation:navRip .6s ease-out forwards}
+@keyframes navRip{to{transform:scale(22);opacity:0}}
+@media (max-width:760px){
+  html[data-mode=vulcan] nav{gap:4px}
+  html[data-mode=vulcan] .nav{padding-right:12px;animation-delay:calc(var(--i,0)*30ms)}
+  html[data-mode=vulcan] .nav::after{display:none}
+  html[data-mode=vulcan] .nav:hover:not(.on){padding-left:12px}
+  html[data-mode=vulcan] .nav-ind{border-radius:999px}
+  html[data-mode=vulcan] .nav-ind::before{display:none}
+}
+.nav-hint{display:none}
+html[data-mode=vulcan] .nav-hint{display:flex;align-items:center;gap:6px;margin:-6px 0 0 14px;font-size:.68rem;letter-spacing:.06em;color:var(--mut);opacity:.75}
+html[data-mode=vulcan] .nav-hint kbd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 4px;border-radius:5px;border:1px solid var(--line2);border-bottom-width:2px;background:rgba(255,255,255,.04);font:600 .68rem var(--mono);color:var(--ink2)}
+@media (max-width:760px),(hover:none){html[data-mode=vulcan] .nav-hint{display:none}}
+/* ===== /VULCAN NAV v2 ===== */
 </style>
 </head>
 <body>
@@ -1352,8 +1475,8 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
   <section id="v-controller" hidden>
     <h1 class="pill"><i></i>CONTROLLER<span class="mbslot" data-ex="excited"></span></h1>
     <h2 class="sub">drive now!</h2>
-    <div class="tip tb"><b>Tips pemula</b><p>Hubungkan micro:bit dulu. Tahan tanda panah untuk bergerak dan lepaskan untuk berhenti. Tombol panah di keyboard juga bisa dipakai. Untuk mengangkut barang: dekati barangnya, tekan CAPIT, bawa ke tujuan, lalu tekan LEPAS.</p></div>
-    <div class="tip tp"><b>Catatan teknis</b><p>Perintah dikirim sebagai teks + newline sesuai mapping di Settings (default up, down, left, right, stop). Perintah stop dikirim saat semua tombol dilepas. CAPIT dan LEPAS (default grip, release) dikirim satu kali per tekan dan tidak memengaruhi gerakan. Input: pointer/touch, panah keyboard, C dan L.</p></div>
+    <div class="tip tb"><b>Tips pemula</b><p>Hubungkan micro:bit dulu. Tahan tanda panah untuk bergerak dan lepaskan untuk berhenti. Keyboard juga bisa dipakai: W A S D untuk bergerak. Untuk mengangkut barang: dekati barangnya, tekan CAPIT, bawa ke tujuan, lalu tekan LEPAS.</p></div>
+    <div class="tip tp"><b>Catatan teknis</b><p>Perintah dikirim sebagai teks + newline sesuai mapping di Settings (default up, down, left, right, stop). Perintah stop dikirim saat semua tombol dilepas. CAPIT dan LEPAS (default grip, release) dikirim satu kali per tekan dan tidak memengaruhi gerakan. Input: pointer/touch, keyboard W A S D, C dan L.</p></div>
     <p class="ctl-warn" id="ctlWarn">Hubungkan micro:bit lewat tombol di sidebar untuk mulai mengontrol.</p>
     <div class="stage">
       <div class="ctlpad">
@@ -1370,7 +1493,7 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
       </div>
       <div class="gst" id="gst" aria-live="polite">CAPIT: &mdash;</div>
       </div>
-      <p class="read">Tahan tombol panah untuk bergerak. Tekan CAPIT atau LEPAS sekali saja untuk menjepit atau melepas barang. Keyboard: panah untuk gerak, C = capit, L = lepas.</p>
+      <p class="read">Tahan tombol panah untuk bergerak. Tekan CAPIT atau LEPAS sekali saja untuk menjepit atau melepas barang. Keyboard: W A S D untuk gerak, C = capit, L = lepas.</p>
     </div>
     <div class="pv"><h3>Data yang dikirim</h3><div class="pvg">
       <span>UP<b id="pv-up">up</b></span><span>DOWN<b id="pv-down">down</b></span><span>LEFT<b id="pv-left">left</b></span><span>RIGHT<b id="pv-right">right</b></span><span>STOP<b id="pv-stop">stop</b></span><span>CAPIT<b id="pv-grip">grip</b></span><span>LEPAS<b id="pv-release">release</b></span>
@@ -1490,6 +1613,13 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
       <label>Model<select id="gkModel" class="sel"><option value="openai/gpt-oss-120b">openai/gpt-oss-120b (paling pintar)</option><option value="openai/gpt-oss-20b">openai/gpt-oss-20b (lebih cepat)</option></select></label>
       <div class="row2" style="grid-column:1/-1;flex-wrap:wrap"><button class="btn" id="gkSave" type="button">Simpan key</button><button class="btn ghost" id="gkTest" type="button">Tes koneksi</button><button class="btn ghost" id="gkShow" type="button">Tampilkan</button><button class="btn ghost" id="gkDel" type="button">Hapus key</button></div>
       <p class="hint2" id="gkMsg" role="status" style="grid-column:1/-1">Belum ada API key.</p>
+    </div>
+
+    <div class="vc-card" id="vcCard">
+      <h3 class="pk-h" id="vcH">Warna cahaya Vulcan</h3>
+      <p class="hint2">Pilih warna aksen dan cahaya latar mode Vulcan: menu aktif, glow, loading screen, dan tombol kirim chat. Tersimpan di browser ini.</p>
+      <div class="vc-sw" id="vcSw" role="group" aria-labelledby="vcH"></div>
+      <div class="vc-custom"><label>Warna sendiri<input type="color" id="vcCustom" value="#6366f1"></label><button class="btn ghost" id="vcReset" type="button">Kembalikan default</button></div>
     </div>
   </section>
 
@@ -1945,10 +2075,10 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
     b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);press(d)});
     ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>release(d)));
   });
-  const KEYS={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
-  const kbOk=e=>!$('v-controller').hidden&&KEYS[e.key]&&!/INPUT|SELECT|TEXTAREA/.test(e.target.tagName);
-  addEventListener('keydown',e=>{if(!kbOk(e)||e.repeat)return;e.preventDefault();press(KEYS[e.key])});
-  addEventListener('keyup',e=>{if(!kbOk(e))return;e.preventDefault();release(KEYS[e.key])});
+  const KEYS={w:'up',s:'down',a:'left',d:'right'}; /* WASD (panah dipakai untuk pindah menu) */
+  const kbOk=e=>!$('v-controller').hidden&&KEYS[(e.key||'').toLowerCase()]&&!/INPUT|SELECT|TEXTAREA/.test(e.target.tagName);
+  addEventListener('keydown',e=>{if(!kbOk(e)||e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;e.preventDefault();press(KEYS[e.key.toLowerCase()])});
+  addEventListener('keyup',e=>{if(!kbOk(e))return;e.preventDefault();release(KEYS[e.key.toLowerCase()])});
   /* Capit (gripper): sekali tekan = kirim satu perintah, tidak mengganggu gerakan D-Pad */
   const GST={grip:'CAPIT: MENGGENGGAM',release:'CAPIT: TERLEPAS'};
   function gripAct(a){
@@ -2376,7 +2506,7 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
   const mk=c=>{const i=new Image();i.className=c;i.alt='';i.src=emb;return i};
   document.querySelectorAll('h1.pill').forEach(h=>h.appendChild(mk('vlogo')));  // logo Vulcan di tiap judul halaman
   const brand=document.querySelector('.logo');if(brand)brand.appendChild(mk('vbrand')); // sidebar
-  const jump=document.querySelector('.fb-jump');if(jump)jump.appendChild(mk('vlogo vjump')); // popup terima kasih
+  const jump=document.querySelector('.fb-jump');if(jump){const g=document.createElement('span');g.className='vgl';g.append(mk('vgb'),mk('vg g1'),mk('vg g2'));jump.appendChild(g)} // popup terima kasih: logo Vulcan ngeglitch
   const subs=[...document.querySelectorAll('section h2.sub')].filter(h=>h.id!=='bbSub')
     .map(h=>({h,b:h.textContent,v:PRO[h.closest('section').id.replace('v-','')]}));
   const navBuddy=document.querySelector('[data-view=buddy]');
@@ -2407,7 +2537,7 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
         const done=()=>{clearTimeout(t);pend.delete(done);r()};
         const t=setTimeout(done,ms);pend.add(done);
       });
-      const setP=v=>{bar.style.transform='scaleX('+v+')';pct.textContent=o.label+' '+Math.round(v*100)+'%'};
+      const setP=v=>{bar.style.transform='scaleX('+v+')';pct.textContent=o.label+' '+Math.round(v*100)+'%';if(o.onProgress)o.onProgress(v,ov)};
       const progress=()=>new Promise(res=>{
         const t0=performance.now();
         const done=()=>{pend.delete(done);res()};pend.add(done);
@@ -2441,12 +2571,72 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
     ov.id='vLoad';ov.setAttribute('role','status');ov.setAttribute('aria-label','Memuat mode Vulcan');
     ov.innerHTML='<div class="vl-half top"><div class="vl-logo"><img alt=""></div></div>'
       +'<div class="vl-half bot"><div class="vl-logo"><img alt=""></div></div>'
-      +'<div class="vl-seam"></div>'
-      +'<div class="vl-center"><div class="vl-word" data-text="VULCAN">VULCAN</div><div class="vl-bar" data-bar><i></i></div><div class="vl-pct" data-pct>INITIALIZING 0%</div></div>'
+      +'<canvas class="vl-cv"></canvas><div class="vl-sweep"></div>'
+      +'<div class="vl-cn tl"></div><div class="vl-cn tr"></div><div class="vl-cn bl"></div><div class="vl-cn br"></div>'
+      +'<div class="vl-tag l">KHONTROL.ER <b>//</b> VULCAN</div><div class="vl-tag r" data-hex>SYS 0x0000</div>'
+      +'<div class="vl-seam"></div><div class="vl-wave"></div><div class="vl-flash"></div><div class="vl-grant">ACCESS GRANTED</div>'
+      +'<div class="vl-center"><div class="vl-hud"><svg class="vl-rings" viewBox="-100 -100 200 200" aria-hidden="true">'
+      +'<circle class="r-track" r="84"/><circle class="r-t3" r="99"/><circle class="r-t1" r="94"/><circle class="r-t2" r="74"/>'
+      +'<circle class="r-prog" r="84" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90)"/>'
+      +'<path class="r-x" d="M0 -100v7M0 100v-7M-100 0h7M100 0h-7"/></svg>'
+      +'<div class="vl-core"><div class="vl-word" data-text="VULCAN">VULCAN</div><div class="vl-num" data-num>0<small>%</small></div></div></div>'
+      +'<div class="vl-bar" data-bar><i></i></div><div class="vl-pct" data-pct>INITIALIZING 0%</div><ul class="vl-log" data-log></ul></div>'
       +'<div class="vl-skip">klik atau tekan Esc untuk lewati</div>';
     const full=document.getElementById('vFull').src;
     ov.querySelectorAll('img').forEach(i=>{i.src=full});
-    return play(ov,{label:'INITIALIZING',hold:1100,seam:380,open:950});
+    const word=ov.querySelector('.vl-word'),TXT='VULCAN',GL='01<>/\\#$%&*+=?';
+    const t0=performance.now();
+    (function sc(now){ /* teks VULCAN: acak lalu "decode" huruf per huruf, sesekali glitch */
+      if(!ov.isConnected||ov.classList.contains('logo-in'))return;
+      const e=now-t0;let s='';
+      for(let i=0;i<TXT.length;i++)s+=e>350+i*140?TXT[i]:GL[Math.random()*GL.length|0];
+      if(e>1300&&Math.random()<.025){const k=Math.random()*TXT.length|0;s=s.slice(0,k)+GL[Math.random()*GL.length|0]+s.slice(k+1)}
+      word.textContent=s;word.dataset.text=s;
+      requestAnimationFrame(sc);
+    })(t0);
+    /* partikel tertarik ke pusat */
+    const cv=ov.querySelector('.vl-cv'),cx=cv.getContext&&cv.getContext('2d');let prog=0;
+    const gv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const C1=gv('--acc-rgb')||'99,102,241',C2=gv('--acc2-rgb')||'34,211,238';
+    if(cx){
+      const dpr=Math.min(2,devicePixelRatio||1);let W=0,H=0;
+      const fit=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)};fit();
+      const N=innerWidth<700?46:78,P=[];
+      const spawn=(p)=>{const a=Math.random()*Math.PI*2,d=Math.max(W,H)*(.35+Math.random()*.4);p.x=W/2+Math.cos(a)*d;p.y=H/2+Math.sin(a)*d*.75;p.a=a;p.d=d;p.s=.6+Math.random()*1.6;p.h=Math.random()<.7?190:240;return p};
+      for(let i=0;i<N;i++){const p=spawn({});p.d*=Math.random();p.x=W/2+Math.cos(p.a)*p.d;p.y=H/2+Math.sin(p.a)*p.d*.75;P.push(p)}
+      (function draw(){
+        if(!ov.isConnected||ov.classList.contains('logo-in'))return;
+        cx.clearRect(0,0,W,H);
+        const pull=.6+prog*2.2;
+        for(const p of P){
+          p.a+=.0045*p.s;p.d-=pull*p.s*.9;
+          if(p.d<60){spawn(p);continue}
+          p.x=W/2+Math.cos(p.a)*p.d;p.y=H/2+Math.sin(p.a)*p.d*.75;
+        }
+        for(let i=0;i<N;i++){const p=P[i];
+          for(let j=i+1;j<N;j++){const q=P[j],dx=p.x-q.x,dy=p.y-q.y,dd=dx*dx+dy*dy;
+            if(dd<9000){cx.strokeStyle='rgba('+C2+','+((1-dd/9000)*.22).toFixed(3)+')';cx.lineWidth=1;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke()}}
+          cx.fillStyle='rgba('+(p.h===190?C2:C1)+','+(.4+prog*.55).toFixed(2)+')';cx.fillRect(p.x-p.s/2,p.y-p.s/2,p.s*1.4,p.s*1.4);
+        }
+        requestAnimationFrame(draw);
+      })();
+    }
+    const num=ov.querySelector('[data-num]'),ring=ov.querySelector('.r-prog'),log=ov.querySelector('[data-log]'),hex=ov.querySelector('[data-hex]');
+    const STEPS=[[.04,'BOOT','kernel.init','OK'],[.2,'LINK','ble.nordic.uart','READY'],[.4,'LOAD','ui.core','OK'],[.6,'SYNC','vision.teachable','OK'],[.8,'AUTH','ai.groq','STANDBY'],[.97,'SYS','all systems nominal','GO']];
+    let si=0,lastHex=0;
+    return play(ov,{label:'INITIALIZING',hold:1300,seam:420,open:950,
+      onProgress(v){
+        prog=v;
+        num.firstChild.nodeValue=String(Math.round(v*100));
+        ring.style.strokeDashoffset=String(100-v*100);
+        while(si<STEPS.length&&v>=STEPS[si][0]){
+          const st=STEPS[si++],li=document.createElement('li');
+          li.innerHTML='&gt; <b>'+st[1]+'</b> '+st[2]+' <i>'+st[3]+'</i>';
+          log.appendChild(li);while(log.children.length>4)log.firstChild.remove();
+        }
+        const n=performance.now();
+        if(n-lastHex>90){lastHex=n;hex.textContent='SYS 0x'+(Math.random()*65535|0).toString(16).toUpperCase().padStart(4,'0')}
+      }});
   }
   function confetti(ov){
     const box=ov.querySelector('.bl-conf');if(!box)return;
@@ -2888,6 +3078,110 @@ html[data-mode=vulcan] .nav.on::before{box-shadow:0 0 10px var(--acc2)}
     if(e.key==='Escape'){e.preventDefault();close()}
     else if(e.key==='Tab'){e.preventDefault();xbtn.focus()}
   });
+})();
+</script>
+
+<script>
+/* Warna cahaya Vulcan */
+(()=>{
+  const root=document.documentElement,KEY='khontrol.vcolor',$=id=>document.getElementById(id);
+  const PAL=[
+    {id:'indigo',n:'Indigo',a:'#6366f1',b:'#22d3ee'},
+    {id:'cyan',n:'Cyan',a:'#06b6d4',b:'#67e8f9'},
+    {id:'emerald',n:'Emerald',a:'#10b981',b:'#a7f3d0'},
+    {id:'violet',n:'Violet',a:'#8b5cf6',b:'#e879f9'},
+    {id:'rose',n:'Rose',a:'#ec4899',b:'#fb7185'},
+    {id:'amber',n:'Amber',a:'#f59e0b',b:'#fde047'},
+    {id:'crimson',n:'Crimson',a:'#ef4444',b:'#fb923c'},
+    {id:'mono',n:'Putih',a:'#d4d4d8',b:'#ffffff'}
+  ];
+  const rgb=h=>{h=h.replace('#','');return[0,2,4].map(i=>parseInt(h.substr(i,2),16))};
+  const hex=c=>'#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+  const lum=c=>{const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])};
+  function hsl(c){let[r,g,b]=c.map(v=>v/255);const M=Math.max(r,g,b),m=Math.min(r,g,b);let h=0,s=0,l=(M+m)/2;
+    if(M!==m){const d=M-m;s=l>.5?d/(2-M-m):d/(M+m);h=M===r?(g-b)/d+(g<b?6:0):M===g?(b-r)/d+2:(r-g)/d+4;h*=60}return[h,s,l]}
+  function fromHsl(h,s,l){h=((h%360)+360)%360;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return[f(0)*255,f(8)*255,f(4)*255]}
+  function apply(a,b){
+    const A=rgb(a),B=rgb(b),h=hsl(A);
+    const C=fromHsl(h[0]+55,Math.max(.5,h[1]),.62);
+    const D=A.map(v=>v*.78);
+    const st=root.style;
+    st.setProperty('--acc',a);st.setProperty('--acc-rgb',A.join(','));
+    st.setProperty('--acc2',b);st.setProperty('--acc2-rgb',B.join(','));
+    st.setProperty('--acc3-rgb',C.map(Math.round).join(','));
+    st.setProperty('--acc-d',hex(D));
+    st.setProperty('--on-acc',lum(A)>.38?'#0b0b0e':'#ffffff');
+  }
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+  function save(o){try{o?localStorage.setItem(KEY,JSON.stringify(o)):localStorage.removeItem(KEY)}catch(e){}}
+  const sw=$('vcSw'),custom=$('vcCustom');
+  function mark(id){[...sw.children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id))}
+  function pick(a,b,id,persist){apply(a,b);mark(id);custom.value=a.length===7?a:'#6366f1';if(persist)save({id,a,b})}
+  PAL.forEach(p=>{const bt=document.createElement('button');bt.type='button';bt.dataset.id=p.id;bt.setAttribute('aria-pressed','false');
+    bt.style.cssText='--c1:'+p.a+';--c2:'+p.b;bt.innerHTML='<i></i>'+p.n;bt.onclick=()=>pick(p.a,p.b,p.id,true);sw.appendChild(bt)});
+  custom.addEventListener('input',()=>{
+    const a=custom.value,h=hsl(rgb(a)),b=hex(fromHsl(h[0]+40,Math.max(.55,h[1]),Math.max(.62,h[2])));
+    apply(a,b);mark('custom');save({id:'custom',a,b});
+  });
+  $('vcReset').onclick=()=>{const p=PAL[0];pick(p.a,p.b,p.id,false);save(null)};
+  const sv=load();
+  if(sv&&/^#[0-9a-f]{6}$/i.test(sv.a)&&/^#[0-9a-f]{6}$/i.test(sv.b)){apply(sv.a,sv.b);mark(sv.id);custom.value=sv.a}
+  else mark('indigo');
+})();
+</script>
+
+<script>
+/* Bar menu Vulcan: indikator meluncur, spotlight kursor, ripple */
+(()=>{
+  const nav=document.querySelector('aside nav');if(!nav)return;
+  const btns=[...nav.querySelectorAll('.nav')];
+  btns.forEach((b,i)=>b.style.setProperty('--i',i));
+  const ind=document.createElement('span');ind.className='nav-ind snap';ind.setAttribute('aria-hidden','true');nav.prepend(ind);
+  const wrap=()=>btns.forEach(b=>{ /* ikon dipisah supaya bisa dianimasikan */
+    const n=b.firstChild;
+    if(n&&n.nodeType===3){const m=/^\s*(\S)\s+([\s\S]*)$/.exec(n.nodeValue);if(m){const sp=document.createElement('span');sp.className='ni';sp.setAttribute('aria-hidden','true');sp.textContent=m[1];n.nodeValue=m[2];b.insertBefore(sp,n)}}
+  });
+  let busy=false;
+  function place(snap){
+    const on=nav.querySelector('.nav.on');if(!on||!on.offsetWidth)return;
+    if(snap)ind.classList.add('snap');
+    ind.style.setProperty('--x',on.offsetLeft+'px');ind.style.setProperty('--y',on.offsetTop+'px');
+    ind.style.setProperty('--w',on.offsetWidth+'px');ind.style.setProperty('--h',on.offsetHeight+'px');
+    if(snap){void ind.offsetWidth;ind.classList.remove('snap')}
+    if(nav.scrollWidth>nav.clientWidth+2){nav.scrollTo({left:on.offsetLeft-(nav.clientWidth-on.offsetWidth)/2,behavior:'smooth'})}
+  }
+  function shine(){ind.classList.remove('go');void ind.offsetWidth;ind.classList.add('go')}
+  wrap();
+  new MutationObserver(()=>{if(busy)return;busy=true;requestAnimationFrame(()=>{busy=false;place(false);shine()})}).observe(nav,{attributes:true,attributeFilter:['class'],subtree:true});
+  const snapPlace=()=>requestAnimationFrame(()=>place(true));
+  addEventListener('resize',snapPlace);
+  document.addEventListener('sitemode',()=>{wrap();setTimeout(snapPlace,60)});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(snapPlace);
+  addEventListener('load',snapPlace);snapPlace();setTimeout(snapPlace,400);
+  nav.addEventListener('pointermove',e=>{const b=e.target.closest&&e.target.closest('.nav');if(!b)return;const r=b.getBoundingClientRect();b.style.setProperty('--mx',(e.clientX-r.left)+'px');b.style.setProperty('--my',(e.clientY-r.top)+'px')});
+  nav.addEventListener('pointerdown',e=>{
+    const b=e.target.closest&&e.target.closest('.nav');if(!b||document.documentElement.dataset.mode!=='vulcan')return;
+    const r=b.getBoundingClientRect(),d=document.createElement('span');d.className='nav-rip';
+    d.style.left=(e.clientX-r.left)+'px';d.style.top=(e.clientY-r.top)+'px';b.appendChild(d);d.addEventListener('animationend',()=>d.remove());
+  });
+  /* Shortcut: panah atas/bawah pindah menu (mode Vulcan) */
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowUp'&&e.key!=='ArrowDown')return;
+    if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||e.defaultPrevented)return;
+    if(document.documentElement.dataset.mode!=='vulcan')return;
+    if(document.getElementById('vLoad')||document.getElementById('bLoad'))return;
+    const t=e.target,tag=t&&t.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
+    if(document.querySelector('.modal:not([hidden])'))return;
+    const i=btns.findIndex(b=>b.classList.contains('on'));
+    const n=btns[(i+(e.key==='ArrowDown'?1:-1)+btns.length)%btns.length];
+    if(!n)return;
+    e.preventDefault();n.click();
+    n.scrollIntoView({block:'nearest',inline:'nearest'});
+  });
+  const hint=document.createElement('div');hint.className='nav-hint';
+  hint.innerHTML='<kbd>\u2191</kbd><kbd>\u2193</kbd><span>pindah menu</span>';
+  nav.after(hint);
 })();
 </script>
 </body>
