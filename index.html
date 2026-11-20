@@ -1564,6 +1564,49 @@ html[data-theme=dark] #bLoad.logo-in .bl-flash{background:radial-gradient(circle
 #bLoad .bl-seam{background:linear-gradient(90deg,transparent,var(--c1),var(--c3),var(--c4),transparent);height:4px;margin-top:-2px;border-radius:4px;box-shadow:0 0 22px rgba(139,107,255,.7)}
 @media (max-width:760px){#bLoad .bl-row{gap:14px}#bLoad .bl-info{min-width:110px}#bLoad .bl-oi{width:28px;height:28px;margin:-14px 0 0 -14px}#bLoad .bl-oi i{width:28px;height:28px}#bLoad .bl-oi svg{width:15px;height:15px}}
 /* ===== /BIT BUDDY LOADING v2 ===== */
+/* ===== VULCAN COMMAND PALETTE ===== */
+.cp,.cp-open{display:none}
+html[data-mode=vulcan] .cp-open{display:flex;align-items:center;gap:9px;width:100%;margin:-4px 0 0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--mut);font:500 .8rem var(--f);cursor:pointer;text-align:left;transition:background-color .18s,border-color .18s,color .18s,transform .12s}
+html[data-mode=vulcan] .cp-open:hover{background:rgba(255,255,255,.07);border-color:var(--line2);color:#fff}
+html[data-mode=vulcan] .cp-open:active{transform:scale(.98)}
+html[data-mode=vulcan] .cp-open svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+html[data-mode=vulcan] .cp-open span{flex:1;white-space:nowrap}
+.cp kbd,.cp-open kbd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:5px;border:1px solid var(--line2);border-bottom-width:2px;background:rgba(255,255,255,.05);font:600 .68rem var(--mono);color:var(--ink2)}
+html[data-mode=vulcan] .cp{display:flex;position:fixed;inset:0;z-index:9000;justify-content:center;align-items:flex-start;padding:13vh 14px 0}
+html[data-mode=vulcan] .cp[hidden]{display:none}
+.cp-bd{position:absolute;inset:0;background:rgba(3,3,6,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:cpFade .2s both}
+.cp.out .cp-bd{animation:cpFade .16s reverse both}
+@keyframes cpFade{from{opacity:0}to{opacity:1}}
+.cp-box{position:relative;width:min(640px,100%);max-height:min(560px,72vh);display:flex;flex-direction:column;background:rgba(15,15,18,.94);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 30px 90px -20px rgba(0,0,0,.9),0 0 70px -24px rgba(var(--acc-rgb),.55);animation:cpIn .3s cubic-bezier(.2,1.25,.3,1) both}
+.cp.out .cp-box{animation:cpOut .16s ease-in both}
+@keyframes cpIn{from{opacity:0;transform:translateY(-14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes cpOut{to{opacity:0;transform:translateY(-8px) scale(.98)}}
+.cp-box::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc),var(--acc2),transparent);opacity:.8}
+.cp-in{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.cp-in svg{width:18px;height:18px;flex:none;stroke:var(--acc2);fill:none;stroke-width:2;stroke-linecap:round}
+.cp-in input{flex:1;min-width:0;background:transparent;border:0;outline:0;box-shadow:none;color:#fff;font:500 1rem var(--f);padding:2px 0;caret-color:var(--acc2)}
+.cp-in input::placeholder{color:#5f5f6b}
+html[data-mode=vulcan] .cp-in input:focus,html[data-mode=vulcan] .cp-in input:focus-visible{outline:0;box-shadow:none;border:0}
+.cp-list{position:relative;overflow-y:auto;padding:8px;flex:1;min-height:60px;scroll-behavior:smooth}
+.cp-hl{position:absolute;left:8px;right:8px;top:0;height:0;border-radius:10px;pointer-events:none;background:linear-gradient(90deg,rgba(var(--acc-rgb),.24),rgba(var(--acc-rgb),.06));border:1px solid rgba(var(--acc-rgb),.38);box-shadow:0 0 24px -8px rgba(var(--acc-rgb),.7);transition:transform .16s cubic-bezier(.2,.9,.3,1),height .16s;z-index:0}
+.cp-gh{position:relative;padding:10px 10px 4px;font:600 .66rem var(--f);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.cp-it{position:relative;z-index:1;display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:10px;color:var(--ink2);cursor:pointer;font:500 .92rem var(--f);animation:cpItem .22s var(--ease) both;animation-delay:calc(var(--n,0)*14ms)}
+@keyframes cpItem{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.cp-it.on{color:#fff}
+.cp-ic{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:.85rem;color:var(--ink2);transition:background-color .15s,color .15s,border-color .15s}
+.cp-it.on .cp-ic{background:rgba(var(--acc-rgb),.25);border-color:rgba(var(--acc-rgb),.5);color:var(--acc2)}
+.cp-ic i{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 0 8px var(--c1)}
+.cp-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-t mark{background:none;color:var(--acc2);font-weight:700}
+.cp-h{flex:none;font:500 .72rem var(--f);color:var(--mut);letter-spacing:.04em}
+.cp-it .cp-go{display:none}
+.cp-it.on .cp-go{display:inline-grid}
+.cp-it.on .cp-h{display:none}
+.cp-em{padding:26px 10px;text-align:center;color:var(--mut);font-size:.88rem}
+.cp-ft{display:flex;gap:16px;align-items:center;padding:9px 16px;border-top:1px solid var(--line);font-size:.72rem;color:var(--mut)}
+.cp-ft span{display:inline-flex;align-items:center;gap:5px}
+@media (max-width:760px){.cp-ft{display:none}html[data-mode=vulcan] .cp{padding-top:9vh}html[data-mode=vulcan] .cp-open kbd{display:none}}
+/* ===== /VULCAN COMMAND PALETTE ===== */
 </style>
 </head>
 <body>
@@ -3492,6 +3535,141 @@ html[data-theme=dark] #bLoad.logo-in .bl-flash{background:radial-gradient(circle
   const hint=document.createElement('div');hint.className='nav-hint';
   hint.innerHTML='<kbd>\u2191</kbd><kbd>\u2193</kbd><span>pindah menu</span>';
   nav.after(hint);
+})();
+</script>
+<script>
+/* Vulcan: Command Palette (Ctrl/Cmd+K atau "/") */
+(()=>{
+  const root=document.documentElement,$=id=>document.getElementById(id);
+  const RK='khontrol.cprecent',URL_PF='https://portofolio-eight-beta-16.vercel.app/';
+  const isMac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent||'');
+  const KEYL=isMac?'⌘K':'Ctrl K';
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  /* elemen */
+  const cp=document.createElement('div');cp.className='cp';cp.id='cp';cp.hidden=true;
+  cp.innerHTML='<div class="cp-bd"></div><div class="cp-box" role="dialog" aria-modal="true" aria-label="Command palette">'
+    +'<div class="cp-in"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
+    +'<input id="cpInput" role="combobox" aria-expanded="true" aria-controls="cpList" aria-autocomplete="list" placeholder="Cari halaman, perintah, atau tanya Vulcan\u2026" autocomplete="off" spellcheck="false"><kbd>Esc</kbd></div>'
+    +'<div class="cp-list" id="cpList" role="listbox" aria-label="Hasil"><div class="cp-hl"></div></div>'
+    +'<div class="cp-ft"><span><kbd>\u2191</kbd><kbd>\u2193</kbd> navigasi</span><span><kbd>\u21B5</kbd> pilih</span><span><kbd>Esc</kbd> tutup</span></div></div>';
+  document.body.appendChild(cp);
+  const inp=$('cpInput'),list=$('cpList'),hl=list.querySelector('.cp-hl');
+  const trig=document.createElement('button');trig.type='button';trig.className='cp-open';trig.setAttribute('aria-label','Buka command palette');
+  trig.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>Cari perintah\u2026</span><kbd>'+KEYL+'</kbd>';
+  const logo=document.querySelector('aside .logo');if(logo)logo.after(trig);
+  /* perintah */
+  const nav=v=>()=>{const b=document.querySelector('.nav[data-view='+v+']');if(b)b.click()};
+  const toast=m=>{const t=$('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2400)};
+  const NAVS=[['dashboard','Dashboard','ringkasan & widget','dashboard widget'],['builder','Builder','buat widget','widget tombol slider switch'],['controller','Controller','D-Pad & capit','kontrol gerak robot'],['teach','Object Detector','Teachable Machine','kamera gesture ai vision'],['parking','Smart Parking','monitor parkir','mobil palang slot'],['buddy','Vulcan','chat AI','chat ai asisten groq'],['settings','Settings','mapping & API key','pengaturan groq api key mapping warna'],['feedback','Feedback','kirim masukan','saran bug'],['creator','The Creator','tentang pembuat','portofolio profil']];
+  const ICO={dashboard:'▦',builder:'⚒',controller:'✥',teach:'◉',parking:'▩',buddy:'◈',settings:'⚙',feedback:'✎',creator:'☺'};
+  const PAL=[['indigo','Indigo','#6366f1','#22d3ee'],['cyan','Cyan','#06b6d4','#67e8f9'],['emerald','Emerald','#10b981','#a7f3d0'],['violet','Violet','#8b5cf6','#e879f9'],['rose','Rose','#ec4899','#fb7185'],['amber','Amber','#f59e0b','#fde047'],['crimson','Crimson','#ef4444','#fb923c'],['mono','Putih','#d4d4d8','#ffffff']];
+  function build(){
+    const c=[];
+    NAVS.forEach(n=>c.push({id:'nav-'+n[0],g:'Navigasi',t:n[0]==='buddy'?'Buka chat Vulcan':'Buka '+n[1],h:n[2],k:n[3],i:ICO[n[0]],run:nav(n[0])}));
+    const conn=$('btnDisc')&&!$('btnDisc').hidden;
+    c.push(conn?{id:'a-disc',g:'Aksi',t:'Putuskan micro:bit',h:'Bluetooth',k:'disconnect lepas bluetooth',i:'✕',run:()=>$('btnDisc').click()}
+               :{id:'a-conn',g:'Aksi',t:'Hubungkan micro:bit',h:'Bluetooth',k:'connect pair bluetooth sambung',i:'⚡',run:()=>$('btnBt').click()});
+    c.push({id:'a-newchat',g:'Aksi',t:'Chat baru dengan Vulcan',h:'reset percakapan',k:'new chat reset hapus',i:'↻',run:()=>{nav('buddy')();setTimeout(()=>{const b=$('bbReset');if(b)b.click()},300)}});
+    c.push({id:'a-copylog',g:'Aksi',t:'Salin log Bluetooth',h:'clipboard',k:'copy log salin',i:'❐',run:()=>{const tx=($('log')||{}).innerText||'';
+      const ok=()=>toast('Log disalin');
+      if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(ok,()=>toast('Gagal menyalin'));
+      else{const t=document.createElement('textarea');t.value=tx;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){toast('Gagal menyalin')}t.remove()}}});
+    c.push({id:'a-buddy',g:'Aksi',t:'Ganti ke mode Bit Buddy',h:'mode pemula',k:'mode switch pemula beginner',i:'⇄',run:()=>{const b=document.querySelector('.mode [data-mode=buddy]');if(b)b.click()}});
+    c.push({id:'a-port',g:'Aksi',t:'Buka portofolio',h:'tab baru',k:'portfolio website creator',i:'↗',run:()=>window.open(URL_PF,'_blank','noopener')});
+    PAL.forEach(p=>c.push({id:'c-'+p[0],g:'Warna cahaya',t:'Warna cahaya: '+p[1],h:'tema Vulcan',k:'warna color tema accent',ic:'<i style="--c1:'+p[2]+';--c2:'+p[3]+'"></i>',run:()=>{const b=document.querySelector('#vcSw [data-id='+p[0]+']');if(b)b.click()}}));
+    return c;
+  }
+  /* fuzzy */
+  function fz1(q,lt){ /* satu token: harus rapat (jendela pencocokan kecil) */
+    let ti=0,s=0,last=-2;const pos=[];
+    for(const ch of q){const i=lt.indexOf(ch,ti);if(i<0)return null;pos.push(i);s+=i===last+1?6:1;if(i===0||' -:/'.includes(lt[i-1]))s+=5;last=i;ti=i+1}
+    if(pos[pos.length-1]-pos[0]+1>Math.ceil(q.length*1.4)+1)return null;
+    return{s:s-pos[0]*.15,pos};
+  }
+  function fz(q,t){
+    const lt=t.toLowerCase();let S=0;const pos=[];
+    for(const tok of q.split(/\s+/).filter(Boolean)){const f=fz1(tok,lt);if(!f)return null;S+=f.s;pos.push(...f.pos)}
+    return{s:S-(lt.length-q.length)*.05,pos};
+  }
+  const mark=(t,pos)=>{if(!pos)return esc(t);const set=new Set(pos);let o='';[...t].forEach((ch,i)=>{o+=set.has(i)?'<mark>'+esc(ch)+'</mark>':esc(ch)});return o};
+  /* state */
+  let items=[],act=0,opener=null,open=false;
+  const recent=()=>{try{return JSON.parse(localStorage.getItem(RK)||'[]')}catch(e){return[]}};
+  const pushRecent=id=>{try{const r=[id,...recent().filter(x=>x!==id)].slice(0,4);localStorage.setItem(RK,JSON.stringify(r))}catch(e){}};
+  function results(q){
+    const all=build();q=q.trim().toLowerCase();
+    if(!q){
+      const r=recent().map(id=>all.find(c=>c.id===id)).filter(Boolean).map(c=>Object.assign({},c,{g:'Terakhir dipakai'}));
+      const rest=all.filter(c=>c.g!=='Warna cahaya');
+      return[...r,...rest.filter(c=>!r.some(x=>x.id===c.id))];
+    }
+    const m=[];
+    all.forEach(c=>{let f=fz(q,c.t);let pos=f&&f.pos;if(!f)f=fz(q,c.t+' '+(c.k||'')+' '+(c.h||''));if(f)m.push(Object.assign({},c,{_s:f.s+(pos?3:0),_pos:pos}))});
+    m.sort((a,b)=>b._s-a._s);
+    const raw=$('cpInput').value.trim();
+    const ask={id:'ask',g:'Tanya Vulcan',t:'Tanya Vulcan: “'+(raw.length>46?raw.slice(0,46)+'…':raw)+'”',h:'kirim ke chat',i:'✦',ask:true,run:()=>{nav('buddy')();setTimeout(()=>{const i=$('bbIn'),s=$('bbSend');if(!i||!s)return;i.value=raw;i.dispatchEvent(new Event('input',{bubbles:true}));s.click()},420)}};
+    const wordy=raw.split(/\s+/).length>=3||/\?$/.test(raw);
+    return raw.length>=2?(wordy?[ask,...m.slice(0,8)]:[...m.slice(0,8),ask]):m.slice(0,8);
+  }
+  function render(){
+    const q=inp.value;items=results(q);if(act>=items.length)act=0;
+    list.querySelectorAll('.cp-it,.cp-gh,.cp-em').forEach(n=>n.remove());
+    if(!items.length){const e=document.createElement('div');e.className='cp-em';e.textContent='Tidak ada hasil';list.appendChild(e);hl.style.height='0';return}
+    let g='',n=0;
+    items.forEach((c,i)=>{
+      if(!q.trim()&&c.g!==g){g=c.g;const h=document.createElement('div');h.className='cp-gh';h.textContent=g;list.appendChild(h)}
+      const d=document.createElement('div');d.className='cp-it';d.id='cpi'+i;d.setAttribute('role','option');d.style.setProperty('--n',n++);
+      d.innerHTML='<span class="cp-ic">'+(c.ic||esc(c.i||''))+'</span><span class="cp-t">'+(c._pos?mark(c.t,c._pos):esc(c.t))+'</span><span class="cp-h">'+esc(q.trim()?c.g:(c.h||''))+'</span><kbd class="cp-go">↵</kbd>';
+      d.addEventListener('pointermove',()=>{if(act!==i){act=i;paint(false)}});
+      d.addEventListener('click',()=>choose(i));
+      list.appendChild(d);
+    });
+    paint(true);
+  }
+  function paint(jump){
+    const els=[...list.querySelectorAll('.cp-it')];
+    els.forEach((e,i)=>{e.classList.toggle('on',i===act);e.setAttribute('aria-selected',i===act)});
+    inp.setAttribute('aria-activedescendant','cpi'+act);
+    const el=els[act];if(!el)return;
+    const prev=hl.style.transition;if(jump)hl.style.transition='none';
+    hl.style.height=el.offsetHeight+'px';hl.style.transform='translateY('+el.offsetTop+'px)';
+    if(jump){void hl.offsetWidth;hl.style.transition=prev}
+    const top=el.offsetTop,bot=top+el.offsetHeight;
+    if(top<list.scrollTop+4)list.scrollTop=Math.max(0,top-34);else if(bot>list.scrollTop+list.clientHeight-4)list.scrollTop=bot-list.clientHeight+8;
+  }
+  function choose(i){const c=items[i];if(!c)return;if(!c.ask)pushRecent(c.id);close();setTimeout(()=>c.run(),170)}
+  function openCp(){
+    if(open||root.dataset.mode!=='vulcan'||$('vLoad')||$('bLoad'))return;
+    open=true;opener=document.activeElement;cp.classList.remove('out');cp.hidden=false;inp.value='';act=0;render();inp.focus();
+  }
+  function close(){
+    if(!open)return;open=false;cp.classList.add('out');
+    setTimeout(()=>{if(!open){cp.hidden=true;cp.classList.remove('out')}},170);
+    if(opener&&opener.focus&&document.contains(opener))opener.focus();opener=null;
+  }
+  inp.addEventListener('input',()=>{act=0;render()});
+  inp.addEventListener('keydown',e=>{
+    const n=items.length;
+    if(e.key==='ArrowDown'){e.preventDefault();if(n){act=(act+1)%n;paint(false)}}
+    else if(e.key==='ArrowUp'){e.preventDefault();if(n){act=(act-1+n)%n;paint(false)}}
+    else if(e.key==='Home'){e.preventDefault();act=0;paint(false)}
+    else if(e.key==='End'){e.preventDefault();act=Math.max(0,n-1);paint(false)}
+    else if(e.key==='Enter'){e.preventDefault();choose(act)}
+    else if(e.key==='Escape'){e.preventDefault();close()}
+    else if(e.key==='Tab'){e.preventDefault()}
+  });
+  cp.querySelector('.cp-bd').addEventListener('click',close);
+  trig.addEventListener('click',openCp);
+  document.addEventListener('keydown',e=>{
+    const k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&!e.altKey&&k==='k'){if(root.dataset.mode!=='vulcan')return;e.preventDefault();open?close():openCp();return}
+    if(k==='/'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!open){
+      const t=e.target,tag=t&&t.tagName;if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
+      if(root.dataset.mode!=='vulcan')return;e.preventDefault();openCp();
+    }
+  },true);
+  document.addEventListener('sitemode',()=>{if(open){open=false;cp.hidden=true}});
+  addEventListener('resize',()=>{if(open)paint(true)});
 })();
 </script>
 </body>
