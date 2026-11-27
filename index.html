@@ -1904,10 +1904,16 @@ html:not([data-mode=vulcan]) .tip{max-width:none}
 @media (pointer:fine){
 html:not([data-mode=vulcan]) *,html[data-mode=vulcan] *{cursor:var(--cur-d,auto)}
 :is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(a,button,summary,label,select,[role=button],[role=radio],[role=switch],[role=tab],[onclick],[tabindex]:not([tabindex="-1"]),input[type=checkbox],input[type=radio],input[type=range],input[type=color],input[type=file],.nav,.btn,.act,.tab,.tg,.star,.item,.sel,.bb-chip,.bb-tile,.cp-it,.w,.themebtn,.mode button,.dm-act button,.nav button){cursor:var(--cur-p,pointer)}
-:is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=button]):not([type=submit]),textarea,[contenteditable=true]){cursor:text}
+:is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=button]):not([type=submit]),textarea,[contenteditable=true]){cursor:var(--cur-t,text)}
+:is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(#log,.bb-m,.bb-code,pre,code,.bb-in){cursor:var(--cur-t,text)}
 :is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(button:disabled,.btn:disabled,[aria-disabled=true],input:disabled){cursor:not-allowed}
 :is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) :is(.joy,.joy .knob){cursor:grab}
 :is(html:not([data-mode=vulcan]),html[data-mode=vulcan]) .dm-c canvas{cursor:crosshair}
+}
+@media (pointer:fine){
+html.cur-sel,html.cur-sel *{cursor:var(--cur-s,text)!important}
+html.cur-prog,html.cur-prog *{cursor:var(--cur-g,progress)!important}
+html.cur-wait,html.cur-wait *{cursor:var(--cur-w,wait)!important}
 }
 </style>
 </head>
@@ -4295,37 +4301,69 @@ html:not([data-mode=vulcan]) *,html[data-mode=vulcan] *{cursor:var(--cur-d,auto)
 })();
 </script>
 <script>
-/* Kursor kustom: Bit Buddy = panah bulat ceria (biru/kuning); Vulcan = panah tajam + reticle, warna ikut warna cahaya */
+/* Kursor kustom v2: default, pointer, teks, seleksi, dan menunggu (animasi). Bit Buddy = bulat ceria; Vulcan = tajam & futuristik, ikut warna cahaya */
 (()=>{
   const root=document.documentElement;
   const url=s=>'url("data:image/svg+xml,'+encodeURIComponent(s)+'")';
   const svg=b=>'<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">'+b+'</svg>';
   const ARW='M5 3.5V23.5L10.3 18.8L13.6 26.4L17.8 24.6L14.6 17.2H21.5Z';
-  /* Bit Buddy */
-  const bbD=svg('<path d="'+ARW+'" fill="#2a8cf0" stroke="#124a8f" stroke-width="4.6" stroke-linejoin="round"/><path d="'+ARW+'" fill="#2a8cf0" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><path d="M8 8.5V14" stroke="#9bdcff" stroke-width="2" stroke-linecap="round"/>');
-  const bbP=svg('<path d="'+ARW+'" fill="#ffc83d" stroke="#a45a00" stroke-width="4.6" stroke-linejoin="round"/><path d="'+ARW+'" fill="#ffc83d" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><path d="M26 4v6M23 7h6" stroke="#ff6b6b" stroke-width="2.2" stroke-linecap="round"/><circle cx="8.3" cy="10" r="1.3" fill="#fff"/>');
-  /* Vulcan: dibangun ulang sesuai warna cahaya */
-  const vul=()=>{
-    const cs=getComputedStyle(root),a=cs.getPropertyValue('--acc').trim()||'#6366f1',b=cs.getPropertyValue('--acc2').trim()||'#22d3ee';
+  const star=(x,y,r,c)=>'<path d="M'+x+' '+(y-r)+'L'+(x+r*.28)+' '+(y-r*.28)+'L'+(x+r)+' '+y+'L'+(x+r*.28)+' '+(y+r*.28)+'L'+x+' '+(y+r)+'L'+(x-r*.28)+' '+(y+r*.28)+'L'+(x-r)+' '+y+'L'+(x-r*.28)+' '+(y-r*.28)+'Z" fill="'+c+'"/>';
+  /* ---------- Bit Buddy ---------- */
+  const bbArrow=(fill,edge,extra,scale)=>'<g'+(scale?' transform="scale('+scale+')"':'')+'><path d="'+ARW+'" transform="translate(1.2 2)" fill="rgba(18,48,74,.28)"/><path d="'+ARW+'" fill="'+fill+'" stroke="'+edge+'" stroke-width="4.6" stroke-linejoin="round"/><path d="'+ARW+'" fill="'+fill+'" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>'+(extra||'')+'</g>';
+  const bbD=svg(bbArrow('#2a8cf0','#124a8f','<path d="M8 8.5V14" stroke="#a9e4ff" stroke-width="2" stroke-linecap="round"/>')+star(26,6,4.2,'#ffc83d'));
+  const bbP=svg(bbArrow('#ffc83d','#a45a00','<circle cx="8.3" cy="10" r="1.3" fill="#fff"/>')+star(26,6,5,'#ff6b6b')+star(29,13,2.2,'#2fd6a0'));
+  const ibeam=(o,m,c)=>'<path d="M10 5H22M10 27H22M16 5V27" stroke="'+o+'" stroke-width="6" stroke-linecap="round"/><path d="M10 5H22M10 27H22M16 5V27" stroke="'+m+'" stroke-width="3.6" stroke-linecap="round"/><path d="M10 5H22M10 27H22M16 5V27" stroke="'+c+'" stroke-width="1.6" stroke-linecap="round"/>';
+  const bbT=svg(ibeam('#124a8f','#fff','#2a8cf0')+'<circle cx="16" cy="16" r="1.4" fill="#ffc83d"/>');
+  const bbS=svg('<rect x="3" y="11" width="26" height="10" rx="5" fill="#ffe066" opacity=".9"/><rect x="3" y="11" width="26" height="10" rx="5" fill="none" stroke="#e0a800" stroke-width="1.4"/>'+ibeam('#124a8f','#fff','#2a8cf0'));
+  const bbSpin=(a,sc)=>'<g transform="'+(sc?'translate(25 25) scale('+sc+') ':'translate(16 16) ')+'rotate('+a+')"><circle r="9.5" fill="none" stroke="#fff" stroke-width="8.2"/><circle r="9.5" fill="none" stroke="#cfe3f7" stroke-width="5"/><circle r="9.5" fill="none" stroke="#2a8cf0" stroke-width="5" stroke-linecap="round" stroke-dasharray="26 34"/><circle cx="9.5" cy="0" r="2.2" fill="#ffc83d" stroke="#fff" stroke-width="1"/></g>';
+  const bbW=[],bbG=[];for(let i=0;i<12;i++){bbW.push(url(svg(bbSpin(i*30))));bbG.push(url(svg(bbArrow('#2a8cf0','#124a8f','',.82)+bbSpin(i*30,.5))))}
+  /* ---------- Vulcan (dibangun ulang sesuai warna) ---------- */
+  let vc=null,vkey='';
+  function vul(){
+    const cs=getComputedStyle(root),a=cs.getPropertyValue('--acc').trim()||'#6366f1',b=cs.getPropertyValue('--acc2').trim()||'#22d3ee',key=a+b;
+    if(key===vkey&&vc)return vc;vkey=key;
     const A='M3.5 2.5V25L9.4 19.6L14 29.4L17.6 27.8L13.1 18.4H21Z';
-    const d=svg('<path d="'+A+'" fill="#0b0b0e" stroke="'+a+'" stroke-width="1.7" stroke-linejoin="miter"/><path d="M3.5 2.5L21 18.4" stroke="'+b+'" stroke-width=".9" opacity=".7"/><rect x="2" y="1" width="3" height="3" fill="'+b+'"/>');
-    const p=svg('<circle cx="16" cy="16" r="8.5" fill="rgba(8,8,10,.35)" stroke="'+a+'" stroke-width="1.6"/><path d="M16 2v7M16 23v7M2 16h7M23 16h7" stroke="'+b+'" stroke-width="1.8"/><circle cx="16" cy="16" r="2.2" fill="'+b+'"/>');
-    return [url(d)+' 3 2, default',url(p)+' 16 16, pointer'];
-  };
-  let lastKey='';
+    const arrow=(sc)=>'<g'+(sc?' transform="scale('+sc+')"':'')+'><path d="'+A+'" fill="none" stroke="'+a+'" stroke-opacity=".35" stroke-width="4.4" stroke-linejoin="miter"/><path d="'+A+'" fill="#0b0b0e" stroke="'+a+'" stroke-width="1.7" stroke-linejoin="miter"/><path d="M5.6 6.6V19L9.6 15.4" fill="none" stroke="'+b+'" stroke-width="1" opacity=".8"/><rect x="1.6" y="0.8" width="3.2" height="3.2" fill="'+b+'"/></g>';
+    const d=svg(arrow());
+    const p=svg('<circle cx="16" cy="16" r="9" fill="rgba(8,8,10,.4)" stroke="'+a+'" stroke-width="1.6"/><path d="M3 9V3H9M23 3H29V9M29 23V29H23M9 29H3V23" fill="none" stroke="'+b+'" stroke-width="1.8"/><path d="M16 4v6M16 22v6M4 16h6M22 16h6" stroke="'+a+'" stroke-width="1.4"/><circle cx="16" cy="16" r="2.4" fill="'+b+'"/>');
+    const iv=(o,c,x)=>'<path d="M10.5 4.5H21.5M10.5 27.5H21.5M16 4.5V27.5" stroke="'+o+'" stroke-width="5" stroke-linecap="square"/><path d="M10.5 4.5H21.5M10.5 27.5H21.5M16 4.5V27.5" stroke="'+c+'" stroke-width="1.7" stroke-linecap="square"/>'+(x||'');
+    const t=svg(iv('rgba(0,0,0,.65)',a,'<rect x="14.6" y="14.6" width="2.8" height="2.8" fill="'+b+'"/>'));
+    const s=svg('<path d="M3 9V5H7M25 5H29V9M29 23V27H25M7 27H3V23" fill="none" stroke="'+b+'" stroke-width="1.8"/><rect x="5" y="12" width="22" height="8" fill="'+a+'" opacity=".28"/>'+iv('rgba(0,0,0,.65)',a));
+    const spin=(ang,sc)=>'<g transform="'+(sc?'translate(25 25) scale('+sc+') ':'translate(16 16) ')+'rotate('+ang+')"><circle r="10" fill="rgba(8,8,10,.55)"/><circle r="10" fill="none" stroke="'+a+'" stroke-opacity=".25" stroke-width="2"/><circle r="10" fill="none" stroke="'+a+'" stroke-width="2.6" stroke-dasharray="14 49"/><g transform="rotate('+(-ang*2)+')"><circle r="6" fill="none" stroke="'+b+'" stroke-width="2" stroke-dasharray="8 30"/></g><circle r="1.8" fill="'+b+'"/><path d="M0 -13V-10M13 0H10M0 13V10M-13 0H-10" stroke="'+b+'" stroke-width="1.4"/></g>';
+    const W=[],G=[];for(let i=0;i<12;i++){W.push(url(svg(spin(i*30))));G.push(url(svg(arrow(.82)+spin(i*30,.5))))}
+    return vc={d:url(d),p:url(p),t:url(t),s:url(s),W,G};
+  }
+  /* ---------- penerapan ---------- */
+  const isV=()=>root.dataset.mode==='vulcan';
+  const set=(k,v)=>root.style.setProperty(k,v);
+  let frame=0,tick=0,state='';
   function apply(){
-    if(root.dataset.mode==='vulcan'){
-      const [d,p]=vul(),k=d;if(k===lastKey&&root.style.getPropertyValue('--cur-d'))return;lastKey=k;
-      root.style.setProperty('--cur-d',d);root.style.setProperty('--cur-p',p);
-    }else{
-      lastKey='';
-      root.style.setProperty('--cur-d',url(bbD)+' 5 3, default');root.style.setProperty('--cur-p',url(bbP)+' 5 3, pointer');
-    }
+    if(isV()){const v=vul();set('--cur-d',v.d+' 3 2, default');set('--cur-p',v.p+' 16 16, pointer');set('--cur-t',v.t+' 16 16, text');set('--cur-s',v.s+' 16 16, text')}
+    else{set('--cur-d',url(bbD)+' 5 3, default');set('--cur-p',url(bbP)+' 5 3, pointer');set('--cur-t',url(bbT)+' 16 16, text');set('--cur-s',url(bbS)+' 16 16, text')}
+    spinFrame();
+  }
+  function spinFrame(){
+    const W=isV()?vul().W:bbW,G=isV()?vul().G:bbG;
+    set('--cur-w',W[frame%12]+' 16 16, wait');set('--cur-g',G[frame%12]+' '+(isV()?3:5)+' '+(isV()?2:3)+', progress');
   }
   apply();
   let t=0;const later=()=>{clearTimeout(t);t=setTimeout(apply,30)};
   document.addEventListener('sitemode',later);
   new MutationObserver(later).observe(root,{attributes:true,attributeFilter:['data-mode','style','data-theme']});
+  /* menunggu: loader = putar penuh; koneksi/AI membalas = panah + putar */
+  const busy=()=>document.getElementById('vLoad')||document.getElementById('bLoad')?'cur-wait':(document.querySelector('.bb-dots')||document.querySelector('.dot.wait'))?'cur-prog':'';
+  function poll(){
+    const b=busy();
+    if(b!==state){root.classList.remove('cur-wait','cur-prog');if(b)root.classList.add(b);state=b;
+      clearInterval(tick);if(b)tick=setInterval(()=>{frame=(frame+1)%12;spinFrame()},85)}
+  }
+  setInterval(poll,200);poll();
+  /* seleksi: aktif saat tombol mouse ditahan dan digeser setelah mulai memilih teks */
+  let pend=false;
+  document.addEventListener('selectstart',()=>{pend=true},true);
+  addEventListener('pointermove',e=>{if(pend&&e.buttons&1&&e.pointerType==='mouse'){const s=getSelection();if(s&&!s.isCollapsed||pend)root.classList.add('cur-sel')}},{passive:true});
+  const end=()=>{pend=false;root.classList.remove('cur-sel')};
+  addEventListener('pointerup',end,true);addEventListener('dragend',end,true);addEventListener('blur',end);
 })();
 </script>
 </body>
